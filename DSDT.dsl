@@ -8848,6 +8848,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             SX44 (SX23, Local0)
             Return (SX23) /* \SX45.SX23 */
         }
+        
+        return (Zero)
     }
 
     Method (SX12, 0, NotSerialized)
