@@ -1,0 +1,2 @@
+External (HNOT, MethodObj, 1)
+External (IDAB, MethodObj, 0)
