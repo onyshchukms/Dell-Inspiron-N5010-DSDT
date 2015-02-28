@@ -119,27 +119,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         0x64
     })
     Name (PEPM, Zero)
-    Method (RRIO, 4, NotSerialized)
-    {
-        Debug = "RRIO"
-    }
-
-    Method (RDMA, 3, NotSerialized)
-    {
-        Debug = "rDMA"
-    }
 
     Name (PICM, Zero)
     Method (_PIC, 1, NotSerialized)  // _PIC: Interrupt Model
     {
-        If (Arg0)
-        {
-            DBG8 = 0xAA
-        }
-        Else
-        {
-            DBG8 = 0xAC
-        }
+        DBG8 = 0xAA
 
         PICM = Arg0
     }
@@ -150,11 +134,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         If ((OSVR != Ones))
         {
             Return (OSVR) /* \OSVR */
-        }
-
-        If ((PICM == Zero))
-        {
-            DBG8 = 0xAC
         }
 
         OSVR = One
@@ -535,336 +514,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
     Scope (_SB)
     {
-        Name (PR00, Package (0x29)
-        {
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0004FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0004FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0004FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0004FFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0005FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0005FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0005FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0005FFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0006FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0006FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0006FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0006FFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001FFFFF, 
-                Zero, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001FFFFF, 
-                One, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001FFFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001BFFFF, 
-                Zero, 
-                LNKG, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0016FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0016FFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0016FFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001CFFFF, 
-                Zero, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001CFFFF, 
-                One, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001CFFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001CFFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0019FFFF, 
-                Zero, 
-                LNKE, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001DFFFF, 
-                Zero, 
-                LNKH, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001DFFFF, 
-                One, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001DFFFF, 
-                0x02, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001DFFFF, 
-                0x03, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001AFFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001AFFFF, 
-                One, 
-                LNKF, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001AFFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x001AFFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0002FFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }
-        })
         Name (AR00, Package (0x29)
         {
             Package (0x04)
@@ -1195,136 +844,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x10
             }
         })
-        Name (PR20, Package (0x10)
-        {
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                Zero, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                One, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                0x02, 
-                LNKF, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0003FFFF, 
-                0x03, 
-                LNKG, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0002FFFF, 
-                Zero, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0002FFFF, 
-                One, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0002FFFF, 
-                0x02, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0002FFFF, 
-                0x03, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKF, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKG, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKH, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKE, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                Zero, 
-                LNKG, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                One, 
-                LNKF, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                0x02, 
-                LNKE, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0x0001FFFF, 
-                0x03, 
-                LNKH, 
-                Zero
-            }
-        })
         Name (AR20, Package (0x10)
         {
             Package (0x04)
@@ -1455,40 +974,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x17
             }
         })
-        Name (PR11, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }
-        })
         Name (AR11, Package (0x04)
         {
             Package (0x04)
@@ -1521,40 +1006,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x03, 
                 Zero, 
                 0x13
-            }
-        })
-        Name (PR12, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKA, 
-                Zero
             }
         })
         Name (AR12, Package (0x04)
@@ -1591,40 +1042,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x10
             }
         })
-        Name (PR13, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKB, 
-                Zero
-            }
-        })
         Name (AR13, Package (0x04)
         {
             Package (0x04)
@@ -1657,40 +1074,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x03, 
                 Zero, 
                 0x11
-            }
-        })
-        Name (PR14, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKC, 
-                Zero
             }
         })
         Name (AR14, Package (0x04)
@@ -1727,40 +1110,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x12
             }
         })
-        Name (PR15, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKD, 
-                Zero
-            }
-        })
         Name (AR15, Package (0x04)
         {
             Package (0x04)
@@ -1793,40 +1142,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x03, 
                 Zero, 
                 0x13
-            }
-        })
-        Name (PR16, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKA, 
-                Zero
             }
         })
         Name (AR16, Package (0x04)
@@ -1863,40 +1178,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x10
             }
         })
-        Name (PR17, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKC, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKB, 
-                Zero
-            }
-        })
         Name (AR17, Package (0x04)
         {
             Package (0x04)
@@ -1929,40 +1210,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x03, 
                 Zero, 
                 0x11
-            }
-        })
-        Name (PR18, Package (0x04)
-        {
-            Package (0x04)
-            {
-                0xFFFF, 
-                Zero, 
-                LNKD, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                One, 
-                LNKA, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x02, 
-                LNKB, 
-                Zero
-            }, 
-
-            Package (0x04)
-            {
-                0xFFFF, 
-                0x03, 
-                LNKC, 
-                Zero
             }
         })
         Name (AR18, Package (0x04)
@@ -2033,12 +1280,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Name (_UID, Zero)  // _UID: Unique ID
             Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
             {
-                If (PICM)
-                {
-                    Return (AR00) /* \_SB_.AR00 */
-                }
-
-                Return (PR00) /* \_SB_.PR00 */
+                Return (AR00) /* \_SB_.AR00 */
             }
 
             Method (_S3D, 0, NotSerialized)  // _S3D: S3 Device State
@@ -2616,12 +1858,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR20) /* \_SB_.AR20 */
-                    }
-
-                    Return (PR20) /* \_SB_.PR20 */
+                    Return (AR20) /* \_SB_.AR20 */
                 }
             }
 
@@ -4528,12 +3765,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR11) /* \_SB_.AR11 */
-                    }
-
-                    Return (PR11) /* \_SB_.PR11 */
+                    Return (AR11) /* \_SB_.AR11 */
                 }
             }
 
@@ -4583,12 +3815,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR12) /* \_SB_.AR12 */
-                    }
-
-                    Return (PR12) /* \_SB_.PR12 */
+                    Return (AR12) /* \_SB_.AR12 */
                 }
             }
 
@@ -4638,12 +3865,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR13) /* \_SB_.AR13 */
-                    }
-
-                    Return (PR13) /* \_SB_.PR13 */
+                    Return (AR13) /* \_SB_.AR13 */
                 }
             }
 
@@ -4693,12 +3915,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR14) /* \_SB_.AR14 */
-                    }
-
-                    Return (PR14) /* \_SB_.PR14 */
+                    Return (AR14) /* \_SB_.AR14 */
                 }
             }
 
@@ -4748,12 +3965,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR15) /* \_SB_.AR15 */
-                    }
-
-                    Return (PR15) /* \_SB_.PR15 */
+                    Return (AR15) /* \_SB_.AR15 */
                 }
             }
 
@@ -4803,12 +4015,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR16) /* \_SB_.AR16 */
-                    }
-
-                    Return (PR16) /* \_SB_.PR16 */
+                    Return (AR16) /* \_SB_.AR16 */
                 }
             }
 
@@ -4858,12 +4065,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR17) /* \_SB_.AR17 */
-                    }
-
-                    Return (PR17) /* \_SB_.PR17 */
+                    Return (AR17) /* \_SB_.AR17 */
                 }
             }
 
@@ -4913,12 +4115,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                 Method (_PRT, 0, NotSerialized)  // _PRT: PCI Routing Table
                 {
-                    If (PICM)
-                    {
-                        Return (AR18) /* \_SB_.AR18 */
-                    }
-
-                    Return (PR18) /* \_SB_.PR18 */
+                    Return (AR18) /* \_SB_.AR18 */
                 }
             }
 
@@ -4985,359 +4182,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         PIRF,   8, 
         PIRG,   8, 
         PIRH,   8
-    }
-
-    Scope (_SB)
-    {
-        Name (BUFA, ResourceTemplate ()
-        {
-            IRQ (Level, ActiveLow, Shared, )
-                {15}
-        })
-        CreateWordField (BUFA, One, IRA0)
-        Device (LNKA)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, One)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRA & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSA) /* \_SB_.PRSA */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRA |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRA & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRA = Local0
-            }
-        }
-
-        Device (LNKB)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x02)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRB & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSB) /* \_SB_.PRSB */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRB |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRB & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRB = Local0
-            }
-        }
-
-        Device (LNKC)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x03)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRC & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSC) /* \_SB_.PRSC */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRC |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRC & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRC = Local0
-            }
-        }
-
-        Device (LNKD)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x04)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRD & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSD) /* \_SB_.PRSD */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRD |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRD & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRD = Local0
-            }
-        }
-
-        Device (LNKE)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x05)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRE & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSE) /* \_SB_.PRSE */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRE |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRE & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRE = Local0
-            }
-        }
-
-        Device (LNKF)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x06)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRF & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSF) /* \_SB_.PRSF */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRF |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRF & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRF = Local0
-            }
-        }
-
-        Device (LNKG)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x07)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRG & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSG) /* \_SB_.PRSG */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRG |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRG & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRG = Local0
-            }
-        }
-
-        Device (LNKH)
-        {
-            Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-            Name (_UID, 0x08)  // _UID: Unique ID
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                Local0 = (PIRH & 0x80)
-                If (Local0)
-                {
-                    Return (0x09)
-                }
-                Else
-                {
-                    Return (0x0B)
-                }
-            }
-
-            Method (_PRS, 0, NotSerialized)  // _PRS: Possible Resource Settings
-            {
-                Return (PRSH) /* \_SB_.PRSH */
-            }
-
-            Method (_DIS, 0, NotSerialized)  // _DIS: Disable Device
-            {
-                PIRH |= 0x80
-            }
-
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Local0 = (PIRH & 0x0F)
-                IRA0 = (One << Local0)
-                Return (BUFA) /* \_SB_.BUFA */
-            }
-
-            Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
-            {
-                CreateWordField (Arg0, One, IRA)
-                FindSetRightBit (IRA, Local0)
-                Local0--
-                PIRH = Local0
-            }
-        }
     }
 
     Name (MISC, Buffer (0x07)
