@@ -2434,8 +2434,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                             0x00,               // Alignment
                             0x04,               // Length
                             )
-                        IRQNoFlags ()
-                            {0}
                     })
                 }
 
@@ -2450,8 +2448,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                             0x00,               // Alignment
                             0x02,               // Length
                             )
-                        IRQNoFlags ()
-                            {8}
                     })
                 }
 
