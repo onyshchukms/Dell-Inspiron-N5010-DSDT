@@ -2053,7 +2053,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 }
             }
 
-            Device (MCH)
+            Device (MCEH)
             {
                 Name (_HID, EisaId ("PNP0C01") /* System Board */)  // _HID: Hardware ID
                 Name (_UID, 0x0A)  // _UID: Unique ID
@@ -2082,12 +2082,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 })
                 Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
-                    CreateDWordField (MCHR, \_SB.PCI0.MCH._Y00._BAS, PCIB)  // _BAS: Base Address
-                    CreateDWordField (MCHR, \_SB.PCI0.MCH._Y00._LEN, PCIL)  // _LEN: Length
+                    CreateDWordField (MCHR, \_SB.PCI0.MCEH._Y00._BAS, PCIB)  // _BAS: Base Address
+                    CreateDWordField (MCHR, \_SB.PCI0.MCEH._Y00._LEN, PCIL)  // _LEN: Length
                     PCIB = PEBS /* \PEBS */
                     PCIL = PEBL /* \PEBL */
-                    CreateDWordField (MCHR, \_SB.PCI0.MCH._Y01._BAS, VTCB)  // _BAS: Base Address
-                    CreateDWordField (MCHR, \_SB.PCI0.MCH._Y01._LEN, VTCL)  // _LEN: Length
+                    CreateDWordField (MCHR, \_SB.PCI0.MCEH._Y01._BAS, VTCB)  // _BAS: Base Address
+                    CreateDWordField (MCHR, \_SB.PCI0.MCEH._Y01._LEN, VTCL)  // _LEN: Length
                     VTCB = VTDS /* \VTDS */
                     VTCL = VTDL /* \VTDL */
                     Return (MCHR) /* \_SB_.PCI0.MCH_.MCHR */
@@ -2157,7 +2157,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 }
             }
 
-            Device (SBRG)
+            Device (LPCB)
             {
                 Name (_ADR, 0x001F0000)  // _ADR: Address
                 Method (SPTS, 1, NotSerialized)
@@ -2355,7 +2355,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     }
                 }
 
-                Device (PIC)
+                Device (IPIC)
                 {
                     Name (_HID, EisaId ("PNP0000") /* 8259-compatible Programmable Interrupt Controller */)  // _HID: Hardware ID
                     Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
@@ -2377,7 +2377,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     })
                 }
 
-                Device (DMAD)
+                Device (DMAC)
                 {
                     Name (_HID, EisaId ("PNP0200") /* PC-class DMA Controller */)  // _HID: Hardware ID
                     Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
@@ -2423,7 +2423,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     })
                 }
 
-                Device (TMR)
+                Device (TIMR)
                 {
                     Name (_HID, EisaId ("PNP0100") /* PC-class System Timer */)  // _HID: Hardware ID
                     Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
@@ -2437,7 +2437,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     })
                 }
 
-                Device (RTC0)
+                Device (RTC)
                 {
                     Name (_HID, EisaId ("PNP0B00") /* AT Real-Time Clock */)  // _HID: Hardware ID
                     Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
@@ -2465,7 +2465,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     })
                 }
 
-                Device (COPR)
+                Device (MATH)
                 {
                     Name (_HID, EisaId ("PNP0C04") /* x87-compatible Floating Point Processing Unit */)  // _HID: Hardware ID
                     Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
@@ -2579,7 +2579,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
-                        Return (CRS) /* \_SB_.PCI0.SBRG.RMSC.CRS_ */
+                        Return (CRS) /* \_SB_.PCI0.LPCB.RMSC.CRS_ */
                     }
                 }
             }
@@ -2752,7 +2752,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Name (GSUE, Zero)
                 Name (GSUT, Zero)
                 Name (GSCR, Zero)
-                Device (CHN0)
+                Device (PRT0)
                 {
                     Name (_ADR, Zero)  // _ADR: Address
                     Method (_GTM, 0, NotSerialized)  // _GTM: Get Timing Mode
@@ -2883,7 +2883,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     }
                 }
 
-                Device (CHN1)
+                Device (PRT1)
                 {
                     Name (_ADR, One)  // _ADR: Address
                     Method (_GTM, 0, NotSerialized)  // _GTM: Get Timing Mode
@@ -4924,8 +4924,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    OperationRegion (_SB.PCI0.SBRG.PIX0, PCI_Config, 0x60, 0x0C)
-    Field (\_SB.PCI0.SBRG.PIX0, ByteAcc, NoLock, Preserve)
+    OperationRegion (_SB.PCI0.LPCB.PIX0, PCI_Config, 0x60, 0x0C)
+    Field (\_SB.PCI0.LPCB.PIX0, ByteAcc, NoLock, Preserve)
     {
         PIRA,   8, 
         PIRB,   8, 
@@ -5964,7 +5964,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Device (OMSC)
+    Device (LDRC)
     {
         Name (_HID, EisaId ("PNP0C02") /* PNP Motherboard Resources */)  // _HID: Hardware ID
         Name (_UID, 0x0E11)  // _UID: Unique ID
@@ -8281,7 +8281,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         MIS0 = (Local0 & 0x13)
         If ((Local1 & One))
         {
-            Notify (\_SB.AC, 0x80) // Status Change
+            Notify (\_SB.ADP1, 0x80) // Status Change
         }
 
         Local2 = (MIS0 & 0x02)
@@ -8534,7 +8534,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         SOST ()
         MIS0 = ECG5 ()
-        Notify (\_SB.AC, 0x80) // Status Change
+        Notify (\_SB.ADP1, 0x80) // Status Change
         SMI (0x9A, Arg0)
         Local1 = GPUF /* \GPUF */
         If ((Local1 == 0x04))
@@ -8614,7 +8614,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         Acquire (SMIX, 0xFFFF)
         SXX2 = Zero
-        If ((\_SB.PCI0.SBRG.RMSC.ENTF == Zero))
+        If ((\_SB.PCI0.LPCB.RMSC.ENTF == Zero))
         {
             NSMI = Zero
         }
@@ -9271,7 +9271,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Scope (_SB.PCI0.SBRG)
+    Scope (_SB.PCI0.LPCB)
     {
         Device (PS2)
         {
@@ -9289,7 +9289,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (CRS) /* \_SB_.PCI0.SBRG.PS2_.CRS_ */
+                Return (CRS) /* \_SB_.PCI0.LPCB.PS2_.CRS_ */
             }
         }
 
@@ -9335,7 +9335,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             })
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
-                Return (CRS) /* \_SB_.PCI0.SBRG.KBC_.CRS_ */
+                Return (CRS) /* \_SB_.PCI0.LPCB.KBC_.CRS_ */
             }
 
             OperationRegion (MMBX, SystemMemory, 0xFE800000, 0x0200)
@@ -9361,67 +9361,67 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Local0 = Zero
                 If ((Arg0 == Zero))
                 {
-                    Local0 = MZ00 /* \_SB_.PCI0.SBRG.KBC_.MZ00 */
+                    Local0 = MZ00 /* \_SB_.PCI0.LPCB.KBC_.MZ00 */
                 }
                 Else
                 {
                     If ((Arg0 == One))
                     {
-                        Local0 = MZ01 /* \_SB_.PCI0.SBRG.KBC_.MZ01 */
+                        Local0 = MZ01 /* \_SB_.PCI0.LPCB.KBC_.MZ01 */
                     }
                     Else
                     {
                         If ((Arg0 == 0x02))
                         {
-                            Local0 = MZ02 /* \_SB_.PCI0.SBRG.KBC_.MZ02 */
+                            Local0 = MZ02 /* \_SB_.PCI0.LPCB.KBC_.MZ02 */
                         }
                         Else
                         {
                             If ((Arg0 == 0x03))
                             {
-                                Local0 = MZ03 /* \_SB_.PCI0.SBRG.KBC_.MZ03 */
+                                Local0 = MZ03 /* \_SB_.PCI0.LPCB.KBC_.MZ03 */
                             }
                             Else
                             {
                                 If ((Arg0 == 0x04))
                                 {
-                                    Local0 = MZ04 /* \_SB_.PCI0.SBRG.KBC_.MZ04 */
+                                    Local0 = MZ04 /* \_SB_.PCI0.LPCB.KBC_.MZ04 */
                                 }
                                 Else
                                 {
                                     If ((Arg0 == 0x05))
                                     {
-                                        Local0 = MZ05 /* \_SB_.PCI0.SBRG.KBC_.MZ05 */
+                                        Local0 = MZ05 /* \_SB_.PCI0.LPCB.KBC_.MZ05 */
                                     }
                                     Else
                                     {
                                         If ((Arg0 == 0x06))
                                         {
-                                            Local0 = MZ06 /* \_SB_.PCI0.SBRG.KBC_.MZ06 */
+                                            Local0 = MZ06 /* \_SB_.PCI0.LPCB.KBC_.MZ06 */
                                         }
                                         Else
                                         {
                                             If ((Arg0 == 0x07))
                                             {
-                                                Local0 = MZ07 /* \_SB_.PCI0.SBRG.KBC_.MZ07 */
+                                                Local0 = MZ07 /* \_SB_.PCI0.LPCB.KBC_.MZ07 */
                                             }
                                             Else
                                             {
                                                 If ((Arg0 == 0x08))
                                                 {
-                                                    Local0 = MZ08 /* \_SB_.PCI0.SBRG.KBC_.MZ08 */
+                                                    Local0 = MZ08 /* \_SB_.PCI0.LPCB.KBC_.MZ08 */
                                                 }
                                                 Else
                                                 {
                                                     If ((Arg0 == 0x09))
                                                     {
-                                                        Local0 = MZ09 /* \_SB_.PCI0.SBRG.KBC_.MZ09 */
+                                                        Local0 = MZ09 /* \_SB_.PCI0.LPCB.KBC_.MZ09 */
                                                     }
                                                     Else
                                                     {
                                                         If ((Arg0 == 0x0A))
                                                         {
-                                                            Local0 = MZ10 /* \_SB_.PCI0.SBRG.KBC_.MZ10 */
+                                                            Local0 = MZ10 /* \_SB_.PCI0.LPCB.KBC_.MZ10 */
                                                         }
                                                     }
                                                 }
@@ -10209,7 +10209,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
     Scope (_SB)
     {
-        Device (AC)
+        Device (ADP1)
         {
             Name (_HID, "ACPI0003" /* Power Source Device */)  // _HID: Hardware ID
             Name (_PCL, Package (0x01)  // _PCL: Power Consumer List
@@ -10492,9 +10492,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         SX10 ()
         If ((NSMI == Zero))
         {
-            \_SB.PCI0.SBRG.KBC.PCA1 (0x9F, One)
-            BBST = \_SB.PCI0.SBRG.KBC.ECRB (0x07)
-            BBS1 = \_SB.PCI0.SBRG.KBC.ECRB (0x08)
+            \_SB.PCI0.LPCB.KBC.PCA1 (0x9F, One)
+            BBST = \_SB.PCI0.LPCB.KBC.ECRB (0x07)
+            BBS1 = \_SB.PCI0.LPCB.KBC.ECRB (0x08)
             Index (Arg1, Zero) = BF00 /* \ECG6.BF00 */
             Local0 = BF02 /* \ECG6.BF02 */
             Local1 = (MIS0 & One)
@@ -10564,15 +10564,15 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         SX10 ()
         If ((NSMI == Zero))
         {
-            \_SB.PCI0.SBRG.KBC.PCA1 (0xA0, One)
-            BBI2 = \_SB.PCI0.SBRG.KBC.ECRB (0x04)
-            BBI1 = \_SB.PCI0.SBRG.KBC.ECRB (0x03)
-            BBI3 = \_SB.PCI0.SBRG.KBC.ECRB (0x05)
-            BBI4 = \_SB.PCI0.SBRG.KBC.ECRB (0x06)
-            \_SB.PCI0.SBRG.KBC.PCA1 (0x9E, One)
-            BC00 = \_SB.PCI0.SBRG.KBC.ECRB (0x03)
-            BC04 = \_SB.PCI0.SBRG.KBC.ECRB (0x04)
-            BC08 = \_SB.PCI0.SBRG.KBC.ECRB (0x05)
+            \_SB.PCI0.LPCB.KBC.PCA1 (0xA0, One)
+            BBI2 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
+            BBI1 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
+            BBI3 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
+            BBI4 = \_SB.PCI0.LPCB.KBC.ECRB (0x06)
+            \_SB.PCI0.LPCB.KBC.PCA1 (0x9E, One)
+            BC00 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
+            BC04 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
+            BC08 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
             Index (Arg1, Zero) = One
             Local0 = (BI03 | (BI04 << 0x08))
             Local1 = Local0
@@ -10651,7 +10651,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         If (Arg0)
         {
-            \_SB.PCI0.SBRG.SPTS (Arg0)
+            \_SB.PCI0.LPCB.SPTS (Arg0)
             \_SB.PCI0.PEX0.SPRT (Arg0)
             \_SB.PCI0.PEX1.SPRT (Arg0)
             \_SB.PCI0.PEX2.SPRT (Arg0)
