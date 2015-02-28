@@ -8334,27 +8334,27 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         If ((Local0 & 0x02))
         {
             Local1 = GPUF /* \GPUF */
-            Name (_T_0, Zero)  // _T_x: Emitted by ASL Compiler
-            _T_0 = Local1
-            If ((_T_0 == One))
+            Name (T_0, Zero)  // _T_x: Emitted by ASL Compiler
+            T_0 = Local1
+            If ((T_0 == One))
             {
                 Notify (\_SB.PCI0.P0P1.PEGP, 0x80) // Status Change
             }
             Else
             {
-                If ((_T_0 == 0x02))
+                If ((T_0 == 0x02))
                 {
                     Notify (\_SB.PCI0.P0P2.PEGP, 0x80) // Status Change
                 }
                 Else
                 {
-                    If ((_T_0 == 0x03))
+                    If ((T_0 == 0x03))
                     {
                         SGTG ()
                     }
                     Else
                     {
-                        If ((_T_0 == 0x04))
+                        If ((T_0 == 0x04))
                         {
                             \_SB.PCI0.GFX0.GHDS (Zero)
                         }
@@ -8393,27 +8393,27 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             If ((Local0 & 0x0400))
             {
                 Local1 = GPUF /* \GPUF */
-                Name (_T_0, Zero)  // _T_x: Emitted by ASL Compiler
-                _T_0 = Local1
-                If ((_T_0 == One))
+                Name (T_0, Zero)  // _T_x: Emitted by ASL Compiler
+                T_0 = Local1
+                If ((T_0 == One))
                 {
                     Notify (\_SB.PCI0.P0P1.PEGP.LCD, 0x86) // Device-Specific
                 }
                 Else
                 {
-                    If ((_T_0 == 0x02))
+                    If ((T_0 == 0x02))
                     {
                         Notify (\_SB.PCI0.P0P2.PEGP.LCD, 0x86) // Device-Specific
                     }
                     Else
                     {
-                        If ((_T_0 == 0x03))
+                        If ((T_0 == 0x03))
                         {
                             SGBU ()
                         }
                         Else
                         {
-                            If ((_T_0 == 0x04))
+                            If ((T_0 == 0x04))
                             {
                                 If ((_REV != 0x03))
                                 {
@@ -8434,27 +8434,27 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             If ((Local0 & 0x0200))
             {
                 Local1 = GPUF /* \GPUF */
-                Name (_T_1, Zero)  // _T_x: Emitted by ASL Compiler
-                _T_1 = Local1
-                If ((_T_1 == One))
+                Name (T_1, Zero)  // _T_x: Emitted by ASL Compiler
+                T_1 = Local1
+                If ((T_1 == One))
                 {
                     Notify (\_SB.PCI0.P0P1.PEGP.LCD, 0x87) // Device-Specific
                 }
                 Else
                 {
-                    If ((_T_1 == 0x02))
+                    If ((T_1 == 0x02))
                     {
                         Notify (\_SB.PCI0.P0P2.PEGP.LCD, 0x87) // Device-Specific
                     }
                     Else
                     {
-                        If ((_T_1 == 0x03))
+                        If ((T_1 == 0x03))
                         {
                             SGBD ()
                         }
                         Else
                         {
-                            If ((_T_1 == 0x04))
+                            If ((T_1 == 0x04))
                             {
                                 If ((_REV != 0x03))
                                 {
