@@ -9519,7 +9519,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         Device (AMW0)
         {
             Mutex (WMIX, 0x01)
-            Name (_HID, "pnp0c14")  // _HID: Hardware ID
+            Name (_HID, "PNP0C14")  // _HID: Hardware ID
             Name (_UID, Zero)  // _UID: Unique ID
             Method (STBY, 3, NotSerialized)
             {
