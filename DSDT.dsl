@@ -2582,6 +2582,28 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                         Return (CRS) /* \_SB_.PCI0.LPCB.RMSC.CRS_ */
                     }
                 }
+                
+                Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
+                {
+                    If ((Arg2 == Zero))
+                    {
+                        Return (Buffer (One)
+                        {
+                             0x03                                             /* . */
+                        })
+                    }
+
+                    Return (Package (0x04)
+                    {
+                        "name", 
+                        "pci8086,3b09", 
+                        "device-id", 
+                        Buffer (0x04)
+                        {
+                             0x09, 0x3B, 0x00, 0x00                           /* .;.. */
+                        }
+                    })
+                }
             }
 
             Device (BR20)
