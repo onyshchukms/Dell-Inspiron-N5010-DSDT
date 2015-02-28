@@ -4453,6 +4453,33 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                         \_SB.PCI0.SMB.HSTS = 0x20
                     }
                 }
+                
+                Device (BUS0)
+                {
+                    Name (_CID, "smbus")  // _CID: Compatible ID
+                    Name (_ADR, Zero)  // _ADR: Address
+                    Device (DVL0)
+                    {
+                        Name (_ADR, 0x57)  // _ADR: Address
+                        Name (_CID, "diagsvault")  // _CID: Compatible ID
+                        Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
+                        {
+                            If ((Arg2 == Zero))
+                            {
+                                Return (Buffer (One)
+                                {
+                                     0x03                                             /* . */
+                                })
+                            }
+
+                            Return (Package (0x02)
+                            {
+                                "address", 
+                                0x57
+                            })
+                        }
+                    }
+                }
             }
 
             Device (PEX0)
