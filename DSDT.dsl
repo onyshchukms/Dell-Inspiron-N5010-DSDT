@@ -4624,6 +4624,8 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Name (_HID, EisaId ("PNP0103") /* HPET System Timer */)  // _HID: Hardware ID
                 Name (CRS, ResourceTemplate ()
                 {
+                    IRQNoFlags ()
+                        {0,8,11,15}
                     Memory32Fixed (ReadWrite,
                         0xFED00000,         // Address Base
                         0x00000400,         // Address Length
