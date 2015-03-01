@@ -37,11 +37,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (PM30, 0x0430)
     Name (SMBS, 0x1180)
     Name (SMBL, 0x20)
-    Name (HPTB, 0xFED00000)
     Name (HPTC, 0xFED1F404)
     Name (GPBS, 0x0500)
     Name (GPLN, 0x80)
-    Name (ACPH, 0xDE)
     Name (ASSB, Zero)
     Name (AOTB, Zero)
     Name (AAXB, Zero)
@@ -49,24 +47,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (SHPC, One)
     Name (PEER, One)
     Name (PECS, One)
-    Name (ITKE, Zero)
-    Name (FMBL, One)
-    Name (BRF, One)
-    Name (BPH, 0x02)
-    Name (BLC, 0x03)
-    Name (BRFS, 0x04)
-    Name (BPHS, 0x05)
-    Name (BLCT, 0x06)
-    Name (BRF4, 0x07)
-    Name (BEP, 0x08)
-    Name (BBF, 0x09)
-    Name (BOF, 0x0A)
-    Name (BPT, 0x0B)
-    Name (SRAF, 0x0C)
-    Name (WWP, 0x0D)
-    Name (DSSP, Zero)
-    Name (FHPP, Zero)
-    Name (TOBS, 0x0460)
     Name (P0HP, Zero)
     Name (P1HP, Zero)
     Name (P3HP, Zero)
@@ -74,31 +54,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (P5HP, Zero)
     Name (P6HP, Zero)
     Name (P7HP, Zero)
-    Name (P2HP, One)
-    Name (PMBA, 0x0400)
-    Name (GPBA, 0x0500)
-    Name (WSMI, 0x0D)
-    Name (BCLS, Package (0x12)
-    {
-        0x64, 
-        0x1E, 
-        0x06, 
-        0x0C, 
-        0x12, 
-        0x18, 
-        0x1E, 
-        0x24, 
-        0x2A, 
-        0x30, 
-        0x36, 
-        0x3C, 
-        0x42, 
-        0x48, 
-        0x4E, 
-        0x54, 
-        0x5A, 
-        0x64
-    })
     Name (PEPM, Zero)
 
     Name (PICM, Zero)
@@ -169,9 +124,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (SS2, Zero)
     Name (SS3, One)
     Name (SS4, One)
-    Name (IOST, 0x0000)
-    Name (TOPM, 0xBFFFFFFF)
-    Name (ROMS, 0xFFE00000)
     Name (MG1B, 0x00000000)
     Name (MG1L, 0x00000000)
     Name (MG2B, 0xC0000000)
@@ -1097,22 +1049,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x12
             }
         })
-        Name (PRSA, ResourceTemplate ()
-        {
-            IRQ (Level, ActiveLow, Shared, )
-                {3,4,5,6,7,10,11,12,14,15}
-        })
-        Alias (PRSA, PRSB)
-        Name (PRSC, ResourceTemplate ()
-        {
-            IRQ (Level, ActiveLow, Shared, )
-                {3,4,5,6,10,11,12,14,15}
-        })
-        Alias (PRSC, PRSD)
-        Alias (PRSA, PRSE)
-        Alias (PRSA, PRSF)
-        Alias (PRSA, PRSG)
-        Alias (PRSA, PRSH)
         Device (PCI0)
         {
             Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
@@ -1187,14 +1123,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 }
             }
 
-            Method (NPTS, 1, NotSerialized)
-            {
-            }
-
-            Method (NWAK, 1, NotSerialized)
-            {
-            }
-
             Device (P0P1)
             {
                 Name (_ADR, 0x00010000)  // _ADR: Address
@@ -1258,17 +1186,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     PS1S = One
                     PS1E = One
                     SLPS = One
-                }
-
-                Method (SWAK, 1, NotSerialized)
-                {
-                    SLPS = Zero
-                    PS1E = Zero
-                    If (RTCS) {}
-                    Else
-                    {
-                        Notify (PWRB, 0x02) // Device Wake
-                    }
                 }
 
                 OperationRegion (APMP, SystemIO, SMIP, 0x02)
@@ -1716,10 +1633,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (SAT0)
             {
                 Name (_ADR, 0x001F0002)  // _ADR: Address
-                Name (^NATA, Package (0x01)
-                {
-                    0x001F0002
-                })
                 Name (\FZTF, Buffer (0x07)
                 {
                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF5         /* ....... */
@@ -2305,17 +2218,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 {
                      0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0xEF         /* ....... */
                 })
-                Name (AT02, Buffer (0x07)
-                {
-                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90         /* ....... */
-                })
                 Name (AT03, Buffer (0x07)
                 {
                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC6         /* ....... */
-                })
-                Name (AT04, Buffer (0x07)
-                {
-                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x91         /* ....... */
                 })
                 Name (ATA0, Buffer (0x1D) {})
                 Name (ATA1, Buffer (0x1D) {})
@@ -3039,17 +2944,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 {
                      0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0xEF         /* ....... */
                 })
-                Name (AT02, Buffer (0x07)
-                {
-                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90         /* ....... */
-                })
                 Name (AT03, Buffer (0x07)
                 {
                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC6         /* ....... */
-                })
-                Name (AT04, Buffer (0x07)
-                {
-                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x91         /* ....... */
                 })
                 Name (ATA0, Buffer (0x1D) {})
                 Name (ATA1, Buffer (0x1D) {})
@@ -3220,313 +3117,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     PECR,   8, 
                     RXSA,   8, 
                     SDAT,   16
-                }
-
-                Method (SSXB, 2, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (Zero)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = Arg0
-                    HCOM = Arg1
-                    HCON = 0x48
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (One)
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (SRXB, 1, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (0xFFFF)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = (Arg0 | One)
-                    HCON = 0x44
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (DAT0) /* \_SB_.PCI0.SMB_.DAT0 */
-                    }
-
-                    Return (0xFFFF)
-                }
-
-                Method (SWRB, 3, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (Zero)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = Arg0
-                    HCOM = Arg1
-                    DAT0 = Arg2
-                    HCON = 0x48
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (One)
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (SRDB, 2, Serialized)
-                {
-                    DBG8 = 0xF3
-                    Sleep (0x03E8)
-                    DBG8 = 0xF4
-                    Sleep (0x03E8)
-                    If (STRT ())
-                    {
-                        Return (0xFFFF)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = (Arg0 | One)
-                    HCOM = Arg1
-                    HCON = 0x48
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (DAT0) /* \_SB_.PCI0.SMB_.DAT0 */
-                    }
-
-                    Return (0xFFFF)
-                }
-
-                Method (SWRW, 3, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (Zero)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = Arg0
-                    HCOM = Arg1
-                    DAT1 = (Arg2 & 0xFF)
-                    DAT0 = ((Arg2 >> 0x08) & 0xFF)
-                    HCON = 0x4C
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (One)
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (SRDW, 2, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (0xFFFF)
-                    }
-
-                    I2CE = Zero
-                    HSTS = 0xBF
-                    TXSA = (Arg0 | One)
-                    HCOM = Arg1
-                    HCON = 0x4C
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (((DAT0 << 0x08) | DAT1))
-                    }
-
-                    Return (0xFFFFFFFF)
-                }
-
-                Method (SBLW, 4, Serialized)
-                {
-                    If (STRT ())
-                    {
-                        Return (Zero)
-                    }
-
-                    I2CE = Arg3
-                    HSTS = 0xBF
-                    TXSA = Arg0
-                    HCOM = Arg1
-                    DAT0 = SizeOf (Arg2)
-                    Local1 = Zero
-                    HBDR = DerefOf (Index (Arg2, Zero))
-                    HCON = 0x54
-                    While ((SizeOf (Arg2) > Local1))
-                    {
-                        Local0 = 0x0FA0
-                        While ((!(HSTS & 0x80) && Local0))
-                        {
-                            Local0--
-                            Stall (0x32)
-                        }
-
-                        If (!Local0)
-                        {
-                            KILL ()
-                            Return (Zero)
-                        }
-
-                        HSTS = 0x80
-                        Local1++
-                        If ((SizeOf (Arg2) > Local1))
-                        {
-                            HBDR = DerefOf (Index (Arg2, Local1))
-                        }
-                    }
-
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (One)
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (SBLR, 3, Serialized)
-                {
-                    Name (TBUF, Buffer (0x0100) {})
-                    If (STRT ())
-                    {
-                        Return (Zero)
-                    }
-
-                    I2CE = Arg2
-                    HSTS = 0xBF
-                    TXSA = (Arg0 | One)
-                    HCOM = Arg1
-                    HCON = 0x54
-                    Local0 = 0x0FA0
-                    While ((!(HSTS & 0x80) && Local0))
-                    {
-                        Local0--
-                        Stall (0x32)
-                    }
-
-                    If (!Local0)
-                    {
-                        KILL ()
-                        Return (Zero)
-                    }
-
-                    Index (TBUF, Zero) = DAT0 /* \_SB_.PCI0.SMB_.DAT0 */
-                    HSTS = 0x80
-                    Local1 = One
-                    While ((Local1 < DerefOf (Index (TBUF, Zero))))
-                    {
-                        Local0 = 0x0FA0
-                        While ((!(HSTS & 0x80) && Local0))
-                        {
-                            Local0--
-                            Stall (0x32)
-                        }
-
-                        If (!Local0)
-                        {
-                            KILL ()
-                            Return (Zero)
-                        }
-
-                        Index (TBUF, Local1) = HBDR /* \_SB_.PCI0.SMB_.HBDR */
-                        HSTS = 0x80
-                        Local1++
-                    }
-
-                    If (COMP ())
-                    {
-                        HSTS |= 0xFF
-                        Return (TBUF) /* \_SB_.PCI0.SMB_.SBLR.TBUF */
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (STRT, 0, Serialized)
-                {
-                    Local0 = 0xC8
-                    While (Local0)
-                    {
-                        If ((HSTS & 0x40))
-                        {
-                            Local0--
-                            Sleep (One)
-                            If ((Local0 == Zero))
-                            {
-                                Return (One)
-                            }
-                        }
-                        Else
-                        {
-                            Local0 = Zero
-                        }
-                    }
-
-                    Local0 = 0x0FA0
-                    While (Local0)
-                    {
-                        If ((HSTS & One))
-                        {
-                            Local0--
-                            Stall (0x32)
-                            If ((Local0 == Zero))
-                            {
-                                KILL ()
-                            }
-                        }
-                        Else
-                        {
-                            Return (Zero)
-                        }
-                    }
-
-                    Return (One)
-                }
-
-                Method (COMP, 0, Serialized)
-                {
-                    Local0 = 0x0FA0
-                    While (Local0)
-                    {
-                        If ((HSTS & 0x02))
-                        {
-                            Return (One)
-                        }
-                        Else
-                        {
-                            Local0--
-                            Stall (0x32)
-                            If ((Local0 == Zero))
-                            {
-                                KILL ()
-                            }
-                        }
-                    }
-
-                    Return (Zero)
-                }
-
-                Method (KILL, 0, Serialized)
-                {
-                    HCON |= 0x02
-                    HSTS |= 0xFF
                 }
 
                 Scope (\_GPE)
@@ -4049,10 +3639,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     })
     CreateByteField (MISC, Zero, MIS0)
     CreateByteField (MISC, One, MIS1)
-    CreateByteField (MISC, 0x02, MIS2)
     CreateByteField (MISC, 0x03, MIS3)
-    CreateByteField (MISC, 0x04, MIS4)
-    CreateByteField (MISC, 0x06, MIS6)
     Scope (_PR)
     {
         Processor (CPU0, 0x01, 0x00000410, 0x06) {}
@@ -4323,43 +3910,10 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         P80H,   32
     }
 
-    Method (P8XH, 2, Serialized)
-    {
-        If ((Arg0 == Zero))
-        {
-            P80D = ((P80D & 0xFFFFFF00) | Arg1)
-        }
-
-        If ((Arg0 == One))
-        {
-            P80D = ((P80D & 0xFFFF00FF) | (Arg1 << 0x08))
-        }
-
-        If ((Arg0 == 0x02))
-        {
-            P80D = ((P80D & 0xFF00FFFF) | (Arg1 << 0x10))
-        }
-
-        If ((Arg0 == 0x03))
-        {
-            P80D = ((P80D & 0x00FFFFFF) | (Arg1 << 0x18))
-        }
-
-        P80H = P80D /* \P80D */
-    }
-
     OperationRegion (SPRT, SystemIO, 0xB2, 0x02)
     Field (SPRT, ByteAcc, Lock, Preserve)
     {
         SSMP,   8
-    }
-
-    Method (GETB, 3, Serialized)
-    {
-        Local0 = (Arg0 * 0x08)
-        Local1 = (Arg1 * 0x08)
-        CreateField (Arg2, Local0, Local1, TBF3)
-        Return (TBF3) /* \GETB.TBF3 */
     }
 
     Scope (_SB.PCI0.P0P1.PEGP)
@@ -5533,21 +5087,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Method (SX31, 1, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            Local0 = SXX2 /* \SXX2 */
-            Local0 += 0x02
-            If ((Local0 <= SizeOf (SXX0)))
-            {
-                CreateWordField (SXX0, SXX2, SX21)
-                SX21 = Arg0
-                SXX2 = Local0
-            }
-        }
-    }
-
     Method (SX32, 1, NotSerialized)
     {
         If ((NSMI == Zero))
@@ -5559,31 +5098,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 CreateDWordField (SXX0, SXX2, SX22)
                 SX22 = Arg0
                 SXX2 = Local0
-            }
-        }
-    }
-
-    Method (SX33, 2, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            If ((Arg1 < SizeOf (Arg0)))
-            {
-                CreateByteField (Arg0, Arg1, SX20)
-                SX30 (SX20)
-            }
-        }
-    }
-
-    Method (SX34, 2, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            Local0 = Zero
-            While ((Local0 < Arg1))
-            {
-                SX33 (Arg0, Local0)
-                Local0++
             }
         }
     }
@@ -5702,44 +5216,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
 
         Return (Zero)
-    }
-
-    Method (SX43, 2, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            If ((Arg1 < SizeOf (Arg0)))
-            {
-                CreateByteField (Arg0, Arg1, SX20)
-                SX20 = SX40 ()
-            }
-        }
-    }
-
-    Method (SX44, 2, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            Local0 = Zero
-            While ((Local0 < Arg1))
-            {
-                SX43 (Arg0, Local0)
-                Local0++
-            }
-        }
-    }
-
-    Method (SX45, 0, NotSerialized)
-    {
-        If ((NSMI == Zero))
-        {
-            Local0 = SX40 ()
-            Name (SX23, Buffer (Local0) {})
-            SX44 (SX23, Local0)
-            Return (SX23) /* \SX45.SX23 */
-        }
-        
-        return (Zero)
     }
 
     Method (SX12, 0, NotSerialized)
@@ -6406,23 +5882,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Scope (_SB)
-    {
-        Mutex (PSMX, 0x00)
-        Method (PHWM, 2, NotSerialized)
-        {
-            Acquire (PSMX, 0xFFFF)
-            WCMD = "QSET"
-            WDID = Arg1
-            WBUF = Arg0
-            SMII = WSMI /* \WSMI */
-            Name (RETB, Buffer (0x1000) {})
-            RETB = WBUF /* \WBUF */
-            Release (PSMX)
-            Return (RETB) /* \_SB_.PHWM.RETB */
-        }
-    }
-
     Scope (_TZ)
     {
         ThermalZone (THM)
@@ -6521,15 +5980,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         Field (SMI1, ByteAcc, NoLock, Preserve)
         {
             SSMI,   8
-        }
-
-        Mutex (MUTE, 0x00)
-        Method (ESWI, 1, NotSerialized)
-        {
-            Acquire (MUTE, 0xFFFF)
-            ECMD = Arg0
-            SSMI = 0xEC
-            Release (MUTE)
         }
     }
 
@@ -6638,11 +6088,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (ECG3, 0, NotSerialized)
     {
         Return (SMI (0x84, Zero))
-    }
-
-    Method (ECG4, 0, NotSerialized)
-    {
-        Return (Zero)
     }
 
     Method (ECG5, 0, NotSerialized)
