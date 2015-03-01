@@ -2501,7 +2501,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Name (GSUE, Zero)
                 Name (GSUT, Zero)
                 Name (GSCR, Zero)
-                Device (CHN0)
+                Device (PRT0)
                 {
                     Name (_ADR, Zero)  // _ADR: Address
                     Method (_GTM, 0, NotSerialized)  // _GTM: Get Timing Mode
@@ -2632,7 +2632,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     }
                 }
 
-                Device (CHN1)
+                Device (PRT1)
                 {
                     Name (_ADR, One)  // _ADR: Address
                     Method (_GTM, 0, NotSerialized)  // _GTM: Get Timing Mode
