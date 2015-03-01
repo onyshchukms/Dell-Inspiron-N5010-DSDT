@@ -6671,9 +6671,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             "     "
         })
         Name (BBSN, Buffer (0x04) {})
-        CreateByteField (BBSN, Zero, SN00)
         CreateWordField (BBSN, One, SN01)
-        CreateByteField (BBSN, 0x03, SN03)
         BBSN = Arg0
         Local2 = SN01 /* \EGB1.SN01 */
         Local3 = 0x04
@@ -6718,8 +6716,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (EGB3, 1, NotSerialized)
     {
         Name (BBOI, Buffer (0x04) {})
-        CreateWordField (BBOI, Zero, OI00)
-        CreateByteField (BBOI, 0x02, OI02)
         CreateByteField (BBOI, 0x03, OI03)
         Name (KNSO, Buffer (0x05)
         {
@@ -6847,7 +6843,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         Name (BBST, Buffer (0x04) {})
         CreateByteField (BBST, Zero, BF00)
-        CreateByteField (BBST, One, BF01)
         CreateWordField (BBST, 0x02, BF02)
         Name (BBS1, Buffer (0x04) {})
         CreateWordField (BBS1, Zero, BF04)
@@ -6910,7 +6905,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (ECG9, 2, NotSerialized)
     {
         Name (BBI1, Buffer (0x04) {})
-        CreateByteField (BBI1, Zero, BI00)
         CreateByteField (BBI1, One, BI01)
         CreateByteField (BBI1, 0x02, BI02)
         CreateByteField (BBI1, 0x03, BI03)
@@ -6918,7 +6912,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         CreateByteField (BBI2, Zero, BI04)
         CreateByteField (BBI2, One, BI05)
         CreateByteField (BBI2, 0x02, BI06)
-        CreateByteField (BBI2, 0x03, BI07)
         Name (BBI3, Buffer (0x04) {})
         Name (BBI4, Buffer (0x04) {})
         Name (BC00, Buffer (0x04) {})
