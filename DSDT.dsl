@@ -20,14 +20,6 @@
  */
 DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 {
-    External (_PR_.P000, ProcessorObj)
-    External (_PR_.P001, ProcessorObj)
-    External (_PR_.P002, ProcessorObj)
-    External (_PR_.P003, ProcessorObj)
-    External (_SB_.PCI0.P0P1.PEGP.DD02, UnknownObj)
-    External (_SB_.PCI0.P0P1.PEGP.PO52, IntObj)
-    External (_SB_.PCI0.WMI1, UnknownObj)
-
     Name (PEBS, 0xE0000000)
     Name (PEBL, 0x10000000)
     Name (VTDS, 0xFED90000)
@@ -5467,7 +5459,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 {
                     If ((T_0 == 0x03))
                     {
-                        SGTG ()
+                        Notify (\_SB.PCI0.P0P1.PEGP, 0x80) // Status Change
                     }
                     Else
                     {
@@ -5479,14 +5471,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         If ((Local0 & 0x04))
         {
             CESM (Local0)
-        }
-
-        If ((Local0 & 0x08))
-        {
-            Notify (\_PR.P000, 0x80) // Status Change
-            Notify (\_PR.P001, 0x80) // Status Change
-            Notify (\_PR.P002, 0x80) // Status Change
-            Notify (\_PR.P003, 0x80) // Status Change
         }
     }
 
@@ -5517,13 +5501,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     }
                     Else
                     {
-                        If ((T_0 == 0x03))
-                        {
-                            SGBU ()
-                        }
-                        Else
-                        {
-                        }
                     }
                 }
             }
@@ -5548,52 +5525,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     }
                     Else
                     {
-                        If ((T_1 == 0x03))
-                        {
-                            SGBD ()
-                        }
-                        Else
-                        {
-                        }
                     }
                 }
             }
-        }
-    }
-
-    Method (SGTG, 0, NotSerialized)
-    {
-        If (\_SB.PCI0.P0P1.PEGP.PO52)
-        {
-            Notify (\_SB.PCI0.WMI1, 0x80) // Status Change
-        }
-        Else
-        {
-            Notify (\_SB.PCI0.P0P1.PEGP, 0x80) // Status Change
-        }
-    }
-
-    Method (SGBD, 0, NotSerialized)
-    {
-        If (\_SB.PCI0.P0P1.PEGP.PO52)
-        {
-            
-        }
-        Else
-        {
-            Notify (\_SB.PCI0.P0P1.PEGP.DD02, 0x87) // Device-Specific
-        }
-    }
-
-    Method (SGBU, 0, NotSerialized)
-    {
-        If (\_SB.PCI0.P0P1.PEGP.PO52)
-        {
-            
-        }
-        Else
-        {
-            Notify (\_SB.PCI0.P0P1.PEGP.DD02, 0x86) // Device-Specific
         }
     }
 
