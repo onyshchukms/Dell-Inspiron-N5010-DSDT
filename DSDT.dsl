@@ -5034,12 +5034,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             SMII,   8, 
             SMID,   8
         }
-
-        OperationRegion (SMR2, SystemIO, 0x86, One)
-        Field (SMR2, ByteAcc, NoLock, Preserve)
-        {
-            SMIA,   8
-        }
     }
 
     Mutex (SMIX, 0x01)
@@ -5972,19 +5966,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 SMI (0xE3, Zero)
             }
         }
-    }
 
-    Scope (_SB)
-    {
-        OperationRegion (SMI1, SystemIO, SMIP, 0x02)
-        Field (SMI1, ByteAcc, NoLock, Preserve)
-        {
-            SSMI,   8
-        }
-    }
-
-    Scope (_SB)
-    {
         Device (BAT0)
         {
             Name (_HID, EisaId ("PNP0C0A") /* Control Method Battery */)  // _HID: Hardware ID
@@ -6018,10 +6000,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Return (BST0) /* \_SB_.BAT0._BST.BST0 */
             }
         }
-    }
 
-    Scope (_SB)
-    {
         Device (ADP1)
         {
             Name (_HID, "ACPI0003" /* Power Source Device */)  // _HID: Hardware ID
@@ -6040,10 +6019,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Return (0x0F)
             }
         }
-    }
 
-    Scope (_SB)
-    {
         Device (LID0)
         {
             Name (_HID, EisaId ("PNP0C0D") /* Lid Device */)  // _HID: Hardware ID
