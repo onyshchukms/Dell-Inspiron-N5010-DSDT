@@ -64,13 +64,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         PICM = Arg0
     }
 
-    Name (OSVR, Ones)
-    Method (OSFL, 0, NotSerialized)
-    {
-        OSVR = 0x04
-        Return (OSVR) /* \OSVR */
-    }
-
     Name (PRWP, Package (0x02)
     {
         Zero, 
@@ -90,14 +83,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         Else
         {
             Local0 >>= One
-            If (((OSFL () == One) || (OSFL () == 0x02)))
-            {
-                FindSetLeftBit (Local0, Index (PRWP, One))
-            }
-            Else
-            {
-                FindSetRightBit (Local0, Index (PRWP, One))
-            }
+            FindSetRightBit (Local0, Index (PRWP, One))
         }
 
         Return (PRWP) /* \PRWP */
@@ -131,7 +117,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     OperationRegion (GNVS, SystemMemory, 0xBF622E18, 0x0172)
     Field (GNVS, AnyAcc, Lock, Preserve)
     {
-        OSYS,   16, 
         SMIF,   8, 
         PRM0,   8, 
         PRM1,   8, 
@@ -1072,14 +1057,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
             Method (_S3D, 0, NotSerialized)  // _S3D: S3 Device State
             {
-                If (((OSFL () == One) || (OSFL () == 0x02)))
-                {
-                    Return (0x02)
-                }
-                Else
-                {
-                    Return (0x03)
-                }
+                Return (0x03)
             }
 
             Device (MCEH)
@@ -3785,10 +3763,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
     {
         DBG8 = Arg0
-        If (((Arg0 == 0x04) && (OSFL () == 0x02)))
-        {
-            Sleep (0x0BB8)
-        }
 
         PTS (Arg0)
         Index (WAKP, Zero) = Zero
@@ -3797,7 +3771,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         WOTB = AOTB /* \AOTB */
         WAXB = AAXB /* \AAXB */
         ASSB = Arg0
-        AOTB = OSFL ()
+        AOTB = 0x04
         AAXB = Zero
         \_SB.SLPS = One
     }
@@ -4906,53 +4880,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         SX11 ()
         Local0 = SX42 ()
         SX12 ()
-        If ((OSYS >= 0x20))
-        {
-            If ((Local0 & 0x0400))
-            {
-                Local1 = GPUF /* \GPUF */
-                Name (T_0, Zero)  // _T_x: Emitted by ASL Compiler
-                T_0 = Local1
-                If ((T_0 == One))
-                {
-                    Notify (\_SB.PCI0.P0P1.PEGP.LCD, 0x86) // Device-Specific
-                }
-                Else
-                {
-                    If ((T_0 == 0x02))
-                    {
-                        Notify (\_SB.PCI0.P0P2.PEGP.LCD, 0x86) // Device-Specific
-                    }
-                    Else
-                    {
-                    }
-                }
-            }
-        }
-
-        If ((OSYS >= 0x20))
-        {
-            If ((Local0 & 0x0200))
-            {
-                Local1 = GPUF /* \GPUF */
-                Name (T_1, Zero)  // _T_x: Emitted by ASL Compiler
-                T_1 = Local1
-                If ((T_1 == One))
-                {
-                    Notify (\_SB.PCI0.P0P1.PEGP.LCD, 0x87) // Device-Specific
-                }
-                Else
-                {
-                    If ((T_1 == 0x02))
-                    {
-                        Notify (\_SB.PCI0.P0P2.PEGP.LCD, 0x87) // Device-Specific
-                    }
-                    Else
-                    {
-                    }
-                }
-            }
-        }
     }
 
     Scope (_GPE)
@@ -4993,14 +4920,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             {
                 If (((MIS1 != Local0) | (Local0 == Zero)))
                 {
-                    If ((OSYS >= 0x20))
-                    {
-                        
-                    }
-                    Else
-                    {
-                        LIDE ()
-                    }
+                    LIDE ()
                 }
             }
         }
@@ -5933,22 +5853,16 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Method (OSID, 0, NotSerialized)
+    Method (SOST, 0, NotSerialized)
     {
+        SX10 ()
+        SX30 (0x0A)
+
         If ((MIS3 == Zero))
         {
             MIS3 = 0x10
         }
 
-        OSYS = MIS3 /* \MIS3 */
-        Return (MIS3) /* \MIS3 */
-    }
-
-    Method (SOST, 0, NotSerialized)
-    {
-        SX10 ()
-        SX30 (0x0A)
-        OSID ()
         SX30 (MIS3)
         SX11 ()
         SX12 ()
@@ -5961,10 +5875,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             MIS0 = SMI (0x98, Zero)
             MIS0 &= 0x13
             SOST ()
-            If ((OSYS == 0x10))
-            {
-                SMI (0xE3, Zero)
-            }
+            SMI (0xE3, Zero)
         }
 
         Device (BAT0)
