@@ -4514,7 +4514,12 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
     Method (NEVT, 0, NotSerialized)
     {
-        Local0 = ECG1 ()
+        SX10 ()
+        SX30 (0x1C)
+        SX11 ()
+        Local0 = SX41 ()
+        SX12 ()
+        
         If ((Local0 & One))
         {
             Notify (\_SB.PWRB, 0x80) // Status Change
@@ -4540,7 +4545,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (NWAK, 0, NotSerialized)
     {
         WAKE = One
-        Local0 = ECG7 ()
+        Local0 = SMI (0x89, Zero)
         Local1 = Zero
         If ((Local0 == Zero))
         {
@@ -4590,7 +4595,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
     Method (PWRE, 0, NotSerialized)
     {
-        Local0 = ECG5 ()
+        Local0 = SMI (0x98, Zero)
         Local1 = (Local0 ^ MIS0) /* \MIS0 */
         MIS0 = (Local0 & 0x13)
         If ((Local1 & One))
@@ -5672,14 +5677,137 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Method (_BIF, 0, NotSerialized)  // _BIF: Battery Information
             {
                 Name (BIF0, Package (0x0D) {})
-                ECG9 (One, BIF0)
+
+                Name (BBI1, Buffer (0x04) {})
+                CreateByteField (BBI1, One, BI01)
+                CreateByteField (BBI1, 0x02, BI02)
+                CreateByteField (BBI1, 0x03, BI03)
+                Name (BBI2, Buffer (0x04) {})
+                CreateByteField (BBI2, Zero, BI04)
+                CreateByteField (BBI2, One, BI05)
+                CreateByteField (BBI2, 0x02, BI06)
+                Name (BBI3, Buffer (0x04) {})
+                Name (BBI4, Buffer (0x04) {})
+                Name (BC00, Buffer (0x04) {})
+                Name (BC04, Buffer (0x04) {})
+                Name (BC08, Buffer (0x04) {})
+                SX10 ()
+                If ((NSMI == Zero))
+                {
+                    \_SB.PCI0.LPCB.KBC.PCA1 (0xA0, One)
+                    BBI2 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
+                    BBI1 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
+                    BBI3 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
+                    BBI4 = \_SB.PCI0.LPCB.KBC.ECRB (0x06)
+                    \_SB.PCI0.LPCB.KBC.PCA1 (0x9E, One)
+                    BC00 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
+                    BC04 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
+                    BC08 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
+                    Index (BIF0, Zero) = One
+                    Local0 = (BI03 | (BI04 << 0x08))
+                    Local1 = Local0
+                    Index (BIF0, One) = Local0
+                    Local0 = (BI01 | (BI02 << 0x08))
+                    Index (BIF0, 0x02) = Local0
+                    Index (BIF0, 0x03) = One
+                    Local0 = (BI05 | (BI06 << 0x08))
+                    Index (BIF0, 0x04) = Local0
+                    Index (BIF0, 0x05) = (Local1 / 0x0A)
+                    Index (BIF0, 0x06) = (Local1 / 0x21)
+                    Index (BIF0, 0x07) = (Local1 / 0x64)
+                    Index (BIF0, 0x08) = (Local1 / 0x64)
+                    Index (BIF0, 0x09) = EGB0 (BC00, BC04, BC08)
+                    Index (BIF0, 0x0A) = EGB1 (BBI3)
+                    Index (BIF0, 0x0B) = EGB2 (BBI4)
+                    Index (BIF0, 0x0C) = EGB3 (BBI3)
+                }
+                Else
+                {
+                    Index (BIF0, Zero) = Zero
+                    Index (BIF0, One) = Zero
+                    Index (BIF0, 0x02) = Zero
+                    Index (BIF0, 0x03) = Zero
+                    Index (BIF0, 0x04) = Zero
+                    Index (BIF0, 0x05) = Zero
+                    Index (BIF0, 0x06) = Zero
+                    Index (BIF0, 0x07) = Zero
+                    Index (BIF0, 0x08) = Zero
+                    Index (BIF0, 0x09) = Zero
+                    Index (BIF0, 0x0A) = Zero
+                    Index (BIF0, 0x0B) = Zero
+                    Index (BIF0, 0x0C) = Zero
+                }
+
+                SX12 ()
+
                 Return (BIF0) /* \_SB_.BAT0._BIF.BIF0 */
             }
 
             Method (_BST, 0, NotSerialized)  // _BST: Battery Status
             {
                 Name (BST0, Package (0x04) {})
-                ECG6 (One, BST0)
+                
+                Name (BBST, Buffer (0x04) {})
+                CreateByteField (BBST, Zero, BF00)
+                CreateWordField (BBST, 0x02, BF02)
+                Name (BBS1, Buffer (0x04) {})
+                CreateWordField (BBS1, Zero, BF04)
+                CreateWordField (BBS1, 0x02, BF06)
+                SX10 ()
+                If ((NSMI == Zero))
+                {
+                    \_SB.PCI0.LPCB.KBC.PCA1 (0x9F, One)
+                    BBST = \_SB.PCI0.LPCB.KBC.ECRB (0x07)
+                    BBS1 = \_SB.PCI0.LPCB.KBC.ECRB (0x08)
+                    Index (BST0, Zero) = BF00
+                    Local0 = BF02
+                    Local1 = (MIS0 & One)
+                    If ((Local0 == Zero))
+                    {
+                        Local0++
+                    }
+                    Else
+                    {
+                        If (((Local1 == One) & (Local0 & 0x8000)))
+                        {
+                            Local0 = 0xFFFFFFFF
+                        }
+                        Else
+                        {
+                            If (((Local1 == One) & ~(Local0 & 0x8000)))
+                            {
+                                Local0 = Local0
+                            }
+                            Else
+                            {
+                                If ((Local0 & 0x8000))
+                                {
+                                    Local0 ^= 0xFFFF
+                                    Local0++
+                                }
+                                Else
+                                {
+                                    Local0 = 0xFFFFFFFF
+                                }
+                            }
+                        }
+                    }
+
+                    Index (BST0, One) = Local0
+                    Index (BST0, 0x02) = BF06
+                    Index (BST0, 0x03) = BF04
+                }
+                Else
+                {
+                    Index (BST0, Zero) = Zero
+                    Index (BST0, One) = Zero
+                    Index (BST0, 0x02) = Zero
+                    Index (BST0, 0x03) = Zero
+                }
+
+                SX12 ()
+                
+                
                 Return (BST0) /* \_SB_.BAT0._BST.BST0 */
             }
         }
@@ -5708,8 +5836,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Name (_HID, EisaId ("PNP0C0D") /* Lid Device */)  // _HID: Hardware ID
             Method (_LID, 0, NotSerialized)  // _LID: Lid Status
             {
-                Local0 = ECG3 ()
-                Return (Local0)
+                Return (SMI (0x84, Zero))
             }
 
             Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
@@ -5727,31 +5854,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         {
             Name (_HID, EisaId ("PNP0C0E") /* Sleep Button Device */)  // _HID: Hardware ID
         }
-    }
-
-    Method (ECG1, 0, NotSerialized)
-    {
-        SX10 ()
-        SX30 (0x1C)
-        SX11 ()
-        Local0 = SX41 ()
-        SX12 ()
-        Return (Local0)
-    }
-
-    Method (ECG7, 0, NotSerialized)
-    {
-        Return (SMI (0x89, Zero))
-    }
-
-    Method (ECG3, 0, NotSerialized)
-    {
-        Return (SMI (0x84, Zero))
-    }
-
-    Method (ECG5, 0, NotSerialized)
-    {
-        Return (SMI (0x98, Zero))
     }
 
     Method (EGB0, 3, NotSerialized)
@@ -5941,134 +6043,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
 
         Return (Local0)
-    }
-
-    Method (ECG6, 2, NotSerialized)
-    {
-        Name (BBST, Buffer (0x04) {})
-        CreateByteField (BBST, Zero, BF00)
-        CreateWordField (BBST, 0x02, BF02)
-        Name (BBS1, Buffer (0x04) {})
-        CreateWordField (BBS1, Zero, BF04)
-        CreateWordField (BBS1, 0x02, BF06)
-        SX10 ()
-        If ((NSMI == Zero))
-        {
-            \_SB.PCI0.LPCB.KBC.PCA1 (0x9F, One)
-            BBST = \_SB.PCI0.LPCB.KBC.ECRB (0x07)
-            BBS1 = \_SB.PCI0.LPCB.KBC.ECRB (0x08)
-            Index (Arg1, Zero) = BF00 /* \ECG6.BF00 */
-            Local0 = BF02 /* \ECG6.BF02 */
-            Local1 = (MIS0 & One)
-            If ((Local0 == Zero))
-            {
-                Local0++
-            }
-            Else
-            {
-                If (((Local1 == One) & (Local0 & 0x8000)))
-                {
-                    Local0 = 0xFFFFFFFF
-                }
-                Else
-                {
-                    If (((Local1 == One) & ~(Local0 & 0x8000)))
-                    {
-                        Local0 = Local0
-                    }
-                    Else
-                    {
-                        If ((Local0 & 0x8000))
-                        {
-                            Local0 ^= 0xFFFF
-                            Local0++
-                        }
-                        Else
-                        {
-                            Local0 = 0xFFFFFFFF
-                        }
-                    }
-                }
-            }
-
-            Index (Arg1, One) = Local0
-            Index (Arg1, 0x02) = BF06 /* \ECG6.BF06 */
-            Index (Arg1, 0x03) = BF04 /* \ECG6.BF04 */
-        }
-        Else
-        {
-            Index (Arg1, Zero) = Zero
-            Index (Arg1, One) = Zero
-            Index (Arg1, 0x02) = Zero
-            Index (Arg1, 0x03) = Zero
-        }
-
-        SX12 ()
-    }
-
-    Method (ECG9, 2, NotSerialized)
-    {
-        Name (BBI1, Buffer (0x04) {})
-        CreateByteField (BBI1, One, BI01)
-        CreateByteField (BBI1, 0x02, BI02)
-        CreateByteField (BBI1, 0x03, BI03)
-        Name (BBI2, Buffer (0x04) {})
-        CreateByteField (BBI2, Zero, BI04)
-        CreateByteField (BBI2, One, BI05)
-        CreateByteField (BBI2, 0x02, BI06)
-        Name (BBI3, Buffer (0x04) {})
-        Name (BBI4, Buffer (0x04) {})
-        Name (BC00, Buffer (0x04) {})
-        Name (BC04, Buffer (0x04) {})
-        Name (BC08, Buffer (0x04) {})
-        SX10 ()
-        If ((NSMI == Zero))
-        {
-            \_SB.PCI0.LPCB.KBC.PCA1 (0xA0, One)
-            BBI2 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
-            BBI1 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
-            BBI3 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
-            BBI4 = \_SB.PCI0.LPCB.KBC.ECRB (0x06)
-            \_SB.PCI0.LPCB.KBC.PCA1 (0x9E, One)
-            BC00 = \_SB.PCI0.LPCB.KBC.ECRB (0x03)
-            BC04 = \_SB.PCI0.LPCB.KBC.ECRB (0x04)
-            BC08 = \_SB.PCI0.LPCB.KBC.ECRB (0x05)
-            Index (Arg1, Zero) = One
-            Local0 = (BI03 | (BI04 << 0x08))
-            Local1 = Local0
-            Index (Arg1, One) = Local0
-            Local0 = (BI01 | (BI02 << 0x08))
-            Index (Arg1, 0x02) = Local0
-            Index (Arg1, 0x03) = One
-            Local0 = (BI05 | (BI06 << 0x08))
-            Index (Arg1, 0x04) = Local0
-            Index (Arg1, 0x05) = (Local1 / 0x0A)
-            Index (Arg1, 0x06) = (Local1 / 0x21)
-            Index (Arg1, 0x07) = (Local1 / 0x64)
-            Index (Arg1, 0x08) = (Local1 / 0x64)
-            Index (Arg1, 0x09) = EGB0 (BC00, BC04, BC08)
-            Index (Arg1, 0x0A) = EGB1 (BBI3)
-            Index (Arg1, 0x0B) = EGB2 (BBI4)
-            Index (Arg1, 0x0C) = EGB3 (BBI3)
-        }
-        Else
-        {
-            Index (Arg1, Zero) = Zero
-            Index (Arg1, One) = Zero
-            Index (Arg1, 0x02) = Zero
-            Index (Arg1, 0x03) = Zero
-            Index (Arg1, 0x04) = Zero
-            Index (Arg1, 0x05) = Zero
-            Index (Arg1, 0x06) = Zero
-            Index (Arg1, 0x07) = Zero
-            Index (Arg1, 0x08) = Zero
-            Index (Arg1, 0x09) = Zero
-            Index (Arg1, 0x0A) = Zero
-            Index (Arg1, 0x0B) = Zero
-            Index (Arg1, 0x0C) = Zero
-        }
-
-        SX12 ()
     }
 
     Name (_S0, Package (0x04)  // _S0_: S0 System State
@@ -6264,7 +6238,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
         
         SOST ()
-        MIS0 = ECG5 ()
+        MIS0 = SMI (0x98, Zero)
         Notify (\_SB.ADP1, 0x80) // Status Change
         SMI (0x9A, Arg0)
         Local1 = GPUF /* \GPUF */
