@@ -37,7 +37,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (PM30, 0x0430)
     Name (SMBS, 0x1180)
     Name (SMBL, 0x20)
-    Name (HPTC, 0xFED1F404)
     Name (GPBS, 0x0500)
     Name (GPLN, 0x80)
     Name (ASSB, Zero)
@@ -98,12 +97,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Field (DEB0, ByteAcc, NoLock, Preserve)
     {
         DBG8,   8
-    }
-
-    OperationRegion (DEB1, SystemIO, 0x90, 0x02)
-    Field (DEB1, WordAcc, NoLock, Preserve)
-    {
-        DBG9,   16
     }
 
     Name (SS1, One)
@@ -1047,10 +1040,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Return (AR00) /* \_SB_.AR00 */
             }
 
-            Method (_S3D, 0, NotSerialized)  // _S3D: S3 Device State
-            {
-                Return (0x03)
-            }
+            Name (_S3D, 0x03)  // _S3D: S3 Device State
 
             Device (MCEH)
             {
@@ -1352,8 +1342,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                             0x00,               // Alignment
                             0x02,               // Length
                             )
-                        IRQNoFlags ()
-                            {2}
                     })
                 }
 
@@ -3059,48 +3047,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (SMB)
             {
                 Name (_ADR, 0x001F0003)  // _ADR: Address
-                OperationRegion (SMBP, PCI_Config, 0x40, 0xC0)
-                Field (SMBP, DWordAcc, NoLock, Preserve)
-                {
-                        ,   2, 
-                    I2CE,   1
-                }
-
-                OperationRegion (SMPB, PCI_Config, 0x20, 0x04)
-                Field (SMPB, DWordAcc, NoLock, Preserve)
-                {
-                        ,   5, 
-                    SBAR,   11
-                }
-
-                OperationRegion (SMBI, SystemIO, (SBAR << 0x05), 0x10)
-                Field (SMBI, ByteAcc, NoLock, Preserve)
-                {
-                    HSTS,   8, 
-                    Offset (0x02), 
-                    HCON,   8, 
-                    HCOM,   8, 
-                    TXSA,   8, 
-                    DAT0,   8, 
-                    DAT1,   8, 
-                    HBDR,   8, 
-                    PECR,   8, 
-                    RXSA,   8, 
-                    SDAT,   16
-                }
-
-                Scope (\_GPE)
-                {
-                    Method (_L07, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
-                    {
-                        \_SB.PCI0.SMB.HSTS = 0x20
-                    }
-
-                    Method (_L1B, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
-                    {
-                        \_SB.PCI0.SMB.HSTS = 0x20
-                    }
-                }
                 
                 Device (BUS0)
                 {
@@ -3589,20 +3535,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    OperationRegion (_SB.PCI0.LPCB.PIX0, PCI_Config, 0x60, 0x0C)
-    Field (\_SB.PCI0.LPCB.PIX0, ByteAcc, NoLock, Preserve)
-    {
-        PIRA,   8, 
-        PIRB,   8, 
-        PIRC,   8, 
-        PIRD,   8, 
-        Offset (0x08), 
-        PIRE,   8, 
-        PIRF,   8, 
-        PIRG,   8, 
-        PIRH,   8
-    }
-
     Name (MISC, Buffer (0x07)
     {
          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00         /* ....... */
@@ -3625,42 +3557,16 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (HPET)
             {
                 Name (_HID, EisaId ("PNP0103") /* HPET System Timer */)  // _HID: Hardware ID
-                Name (CRS, ResourceTemplate ()
+                Name (_STA, 0x0F)  // _STA: Status
+                Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
                 {
                     IRQNoFlags ()
-                        {0,8,11,15}
+                        {0,8,11}
                     Memory32Fixed (ReadWrite,
                         0xFED00000,         // Address Base
                         0x00000400,         // Address Length
                         _Y08)
                 })
-                OperationRegion (HCNT, SystemMemory, HPTC, 0x04)
-                Field (HCNT, DWordAcc, NoLock, Preserve)
-                {
-                    HPTS,   2, 
-                        ,   5, 
-                    HPTE,   1
-                }
-
-                Method (_STA, 0, NotSerialized)  // _STA: Status
-                {
-                    If (HPTE)
-                    {
-                        Return (0x0F)
-                    }
-                    Else
-                    {
-                        Return (Zero)
-                    }
-                }
-
-                Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-                {
-                    CreateDWordField (CRS, \_SB.PCI0.HPET._Y08._BAS, HTBS)  // _BAS: Base Address
-                    Local0 = (HPTS * 0x1000)
-                    HTBS = (Local0 + 0xFED00000)
-                    Return (CRS) /* \_SB_.PCI0.HPET.CRS_ */
-                }
             }
         }
     }
@@ -3749,48 +3655,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Name (WOTB, Zero)
-    Name (WSSB, Zero)
-    Name (WAXB, Zero)
-    Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
-    {
-        DBG8 = Arg0
-
-        PTS (Arg0)
-        Index (WAKP, Zero) = Zero
-        Index (WAKP, One) = Zero
-        WSSB = ASSB /* \ASSB */
-        WOTB = AOTB /* \AOTB */
-        WAXB = AAXB /* \AAXB */
-        ASSB = Arg0
-        AOTB = 0x04
-        AAXB = Zero
-        \_SB.SLPS = One
-    }
-
-    Method (_WAK, 1, NotSerialized)  // _WAK: Wake
-    {
-        DBG8 = (Arg0 << 0x04)
-        WAK (Arg0)
-        If (ASSB)
-        {
-            ASSB = WSSB /* \WSSB */
-            AOTB = WOTB /* \WOTB */
-            AAXB = WAXB /* \WAXB */
-        }
-
-        If (DerefOf (Index (WAKP, Zero)))
-        {
-            Index (WAKP, One) = Zero
-        }
-        Else
-        {
-            Index (WAKP, One) = Arg0
-        }
-
-        Return (WAKP) /* \WAKP */
-    }
-
     Scope (_SB)
     {
         Scope (PCI0)
@@ -3868,18 +3732,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         Name (_HID, EisaId ("PNP0C01") /* System Board */)  // _HID: Hardware ID
         Name (_UID, One)  // _UID: Unique ID
-    }
-
-    OperationRegion (PRT0, SystemIO, 0x80, 0x04)
-    Field (PRT0, DWordAcc, Lock, Preserve)
-    {
-        P80H,   32
-    }
-
-    OperationRegion (SPRT, SystemIO, 0xB2, 0x02)
-    Field (SPRT, ByteAcc, Lock, Preserve)
-    {
-        SSMP,   8
     }
 
     Scope (_SB.PCI0.P0P1.PEGP)
@@ -4660,47 +4512,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Scope (_SB.PCI0)
-    {
-        Method (PEWK, 0, NotSerialized)
-        {
-            If ((PE4E == Zero))
-            {
-                If (^PEX4.PDCX)
-                {
-                    ^PEX4.PDCX = One
-                    ^PEX4.HPST = One
-                }
-                Else
-                {
-                    ^PEX4.HPST = One
-                }
-
-                Notify (PEX4, Zero) // Bus Check
-            }
-        }
-
-        Method (RLWK, 0, NotSerialized)
-        {
-            If ((PE2E == Zero))
-            {
-                If (^PEX2.PDCX)
-                {
-                    DBG8 = 0xEE
-                    ^PEX2.PDCX = One
-                    ^PEX2.HPST = One
-                }
-                Else
-                {
-                    DBG8 = 0xEF
-                    ^PEX2.HPST = One
-                }
-
-                Notify (PEX2, Zero) // Bus Check
-            }
-        }
-    }
-
     Method (NEVT, 0, NotSerialized)
     {
         Local0 = ECG1 ()
@@ -4884,37 +4695,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         Method (_L17, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
         {
             NWAK ()
-        }
-    }
-
-    Method (OPTS, 1, NotSerialized)
-    {
-        If ((Arg0 == 0x03))
-        {
-            S3FL = One
-        }
-
-        SMI (0x8A, Arg0)
-        MIS1 = SMI (0x46, Zero)
-    }
-
-    Method (OWAK, 1, NotSerialized)
-    {
-        SOST ()
-        MIS0 = ECG5 ()
-        Notify (\_SB.ADP1, 0x80) // Status Change
-        SMI (0x9A, Arg0)
-        Local1 = GPUF /* \GPUF */
-        If ((Local1 == 0x04))
-        {
-            Local0 = SMI (0x46, Zero)
-            If ((Arg0 == 0x03))
-            {
-                If (((MIS1 != Local0) | (Local0 == Zero)))
-                {
-                    LIDE ()
-                }
-            }
         }
     }
 
@@ -6327,8 +6107,14 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         Zero, 
         Zero
     })
-    Method (PTS, 1, NotSerialized)
+
+    Name (WOTB, Zero)
+    Name (WSSB, Zero)
+    Name (WAXB, Zero)
+    Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
     {
+        DBG8 = Arg0
+        
         If (Arg0)
         {
             \_SB.PCI0.LPCB.SPTS (Arg0)
@@ -6340,12 +6126,31 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             \_SB.PCI0.PEX5.SPRT (Arg0)
             \_SB.PCI0.PEX6.SPRT (Arg0)
             \_SB.PCI0.PEX7.SPRT (Arg0)
-            OPTS (Arg0)
+            
+            If ((Arg0 == 0x03))
+            {
+                S3FL = One
+            }
+
+            SMI (0x8A, Arg0)
+            MIS1 = SMI (0x46, Zero)
         }
+        
+        Index (WAKP, Zero) = Zero
+        Index (WAKP, One) = Zero
+        WSSB = ASSB /* \ASSB */
+        WOTB = AOTB /* \AOTB */
+        WAXB = AAXB /* \AAXB */
+        ASSB = Arg0
+        AOTB = 0x04
+        AAXB = Zero
+        \_SB.SLPS = One
     }
 
-    Method (WAK, 1, NotSerialized)
+    Method (_WAK, 1, NotSerialized)  // _WAK: Wake
     {
+        DBG8 = (Arg0 << 0x04)
+        
         If (\_SB.PCI0.PEX0.PMS)
         {
             \_SB.PCI0.PEX0.WPRT (Arg0)
@@ -6426,9 +6231,72 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             \_SB.PCI0.PEX7.WPRT (Arg0)
         }
 
-        \_SB.PCI0.PEWK ()
-        \_SB.PCI0.RLWK ()
-        OWAK (Arg0)
+        If ((PE4E == Zero))
+        {
+            If (\_SB.PCI0.PEX4.PDCX)
+            {
+                \_SB.PCI0.PEX4.PDCX = One
+                \_SB.PCI0.PEX4.HPST = One
+            }
+            Else
+            {
+                \_SB.PCI0.PEX4.HPST = One
+            }
+
+            Notify (\_SB.PCI0.PEX4, Zero) // Bus Check
+        }
+        
+        If ((PE2E == Zero))
+        {
+            If (\_SB.PCI0.PEX2.PDCX)
+            {
+                DBG8 = 0xEE
+                \_SB.PCI0.PEX2.PDCX = One
+                \_SB.PCI0.PEX2.HPST = One
+            }
+            Else
+            {
+                DBG8 = 0xEF
+                \_SB.PCI0.PEX2.HPST = One
+            }
+
+            Notify (\_SB.PCI0.PEX2, Zero) // Bus Check
+        }
+        
+        SOST ()
+        MIS0 = ECG5 ()
+        Notify (\_SB.ADP1, 0x80) // Status Change
+        SMI (0x9A, Arg0)
+        Local1 = GPUF /* \GPUF */
+        If ((Local1 == 0x04))
+        {
+            Local0 = SMI (0x46, Zero)
+            If ((Arg0 == 0x03))
+            {
+                If (((MIS1 != Local0) | (Local0 == Zero)))
+                {
+                    LIDE ()
+                }
+            }
+        }
+        
+        If (ASSB)
+        {
+            ASSB = WSSB /* \WSSB */
+            AOTB = WOTB /* \WOTB */
+            AAXB = WAXB /* \WAXB */
+        }
+
+        If (DerefOf (Index (WAKP, Zero)))
+        {
+            Index (WAKP, One) = Zero
+        }
+        Else
+        {
+            Index (WAKP, One) = Arg0
+        }
+
+        Return (WAKP) /* \WAKP */
     }
 }
 
