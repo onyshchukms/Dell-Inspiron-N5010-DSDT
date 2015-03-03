@@ -3510,6 +3510,26 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Name (_CID, "backlight")  // _CID: Compatible ID
             Name (_UID, 0x0A)  // _UID: Unique ID
             Name (_STA, 0x0B)  // _STA: Status
+            
+            Method (_BCL, 0, NotSerialized)
+            {
+                Return (^^PCI0.P0P1.PEGP.LCD._BCL ())
+            }
+            
+            Method (_BCM, 1, NotSerialized)
+            {
+                ^^PCI0.P0P1.PEGP.LCD._BCM (Arg0)
+            }
+            
+            Method (_BQC, 0, NotSerialized)
+            {
+                Return (^^PCI0.P0P1.PEGP.LCD._BQC ())
+            }
+            
+            Method (_DOS, 1, NotSerialized)
+            {
+                ^^PCI0.P0P1.PEGP._DOS (Arg0)
+            }
         }
 
         Device (PWRB)
