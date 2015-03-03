@@ -31,7 +31,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (SUSW, 0xFF)
     Name (PMBS, 0x0400)
     Name (PMLN, 0x80)
-    Name (SMIP, 0xB2)
     Name (APCB, 0xFEC00000)
     Name (APCL, 0x00100000)
     Name (PM30, 0x0430)
@@ -1146,20 +1145,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     PS1S = One
                     PS1E = One
                     SLPS = One
-                }
-
-                OperationRegion (APMP, SystemIO, SMIP, 0x02)
-                Field (APMP, ByteAcc, NoLock, Preserve)
-                {
-                    APMC,   8, 
-                    APMS,   8
-                }
-
-                Field (APMP, ByteAcc, NoLock, Preserve)
-                {
-                    Offset (0x01), 
-                        ,   1, 
-                    BRTC,   1
                 }
 
                 OperationRegion (SMIE, SystemIO, PM30, 0x08)
@@ -3764,33 +3749,9 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             })
         }
 
-        Device (CRT)
-        {
-            Method (_ADR, 0, NotSerialized)  // _ADR: Address
-            {
-                Return (0x0100)
-            }
-
-            Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
-            {
-                Local0 = SMI (0x8E, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
-            {
-                Local0 = SMI (0x99, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
-            {
-                DSS (0x02, Arg0)
-            }
-        }
-
         Device (LCD)
         {
+            Name (_HID, EisaId ("LCD1234"))
             Method (_ADR, 0, NotSerialized)  // _ADR: Address
             {
                 Return (0x0110)
@@ -3853,31 +3814,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             {
                 Local0 = SMI (0x19, 0x02)
                 Return (Local0)
-            }
-        }
-
-        Device (DVI)
-        {
-            Method (_ADR, 0, NotSerialized)  // _ADR: Address
-            {
-                Return (0x0210)
-            }
-
-            Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
-            {
-                Local0 = SMI (0x8E, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
-            {
-                Local0 = SMI (0x99, 0x08)
-                Return (Local0)
-            }
-
-            Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
-            {
-                DSS (0x02, Arg0)
             }
         }
     }
@@ -3912,31 +3848,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             })
         }
 
-        Device (CRT)
-        {
-            Method (_ADR, 0, NotSerialized)  // _ADR: Address
-            {
-                Return (0x0100)
-            }
-
-            Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
-            {
-                Local0 = SMI (0x8E, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
-            {
-                Local0 = SMI (0x99, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
-            {
-                DSS (0x02, Arg0)
-            }
-        }
-
         Device (LCD)
         {
             Method (_ADR, 0, NotSerialized)  // _ADR: Address
@@ -4001,31 +3912,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             {
                 Local0 = SMI (0x19, 0x02)
                 Return (Local0)
-            }
-        }
-
-        Device (DVI)
-        {
-            Method (_ADR, 0, NotSerialized)  // _ADR: Address
-            {
-                Return (0x0210)
-            }
-
-            Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
-            {
-                Local0 = SMI (0x8E, 0x02)
-                Return (Local0)
-            }
-
-            Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
-            {
-                Local0 = SMI (0x99, 0x08)
-                Return (Local0)
-            }
-
-            Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
-            {
-                DSS (0x02, Arg0)
             }
         }
     }
@@ -4512,80 +4398,16 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         }
     }
 
-    Method (NEVT, 0, NotSerialized)
-    {
-        SX10 ()
-        SX30 (0x1C)
-        SX11 ()
-        Local0 = SX41 ()
-        SX12 ()
-        
-        If ((Local0 & One))
-        {
-            Notify (\_SB.PWRB, 0x80) // Status Change
-        }
-
-        If ((Local0 & 0x04))
-        {
-            LIDE ()
-        }
-
-        If ((Local0 & 0x08))
-        {
-            PWRE ()
-        }
-
-        If ((Local0 & 0x80))
-        {
-            SMIE ()
-        }
-    }
-
-    Name (WAKE, Zero)
-    Method (NWAK, 0, NotSerialized)
-    {
-        WAKE = One
-        Local0 = SMI (0x89, Zero)
-        Local1 = Zero
-        If ((Local0 == Zero))
-        {
-            Local1 = One
-        }
-
-        If ((Local0 & One))
-        {
-            Local1 = One
-        }
-
-        If ((Local0 & 0x02))
-        {
-            LIDE ()
-        }
-
-        If ((Local0 & 0x20)) {}
-        If (Local1)
-        {
-            Notify (\_SB.PWRB, 0x02) // Device Wake
-        }
-
-        WAKE = Zero
-    }
-
     Mutex (GFXM, 0x01)
-    Method (ILID, 0, NotSerialized)
-    {
-        Acquire (GFXM, 0xFFFF)
-        Local0 = SMI (0x46, Zero)
-        Notify (\_SB.LID0, 0x80) // Status Change
-        Release (GFXM)
-    }
-
     Method (LIDE, 0, NotSerialized)
     {
         Local1 = GPUF /* \GPUF */
         If ((Local1 == 0x04))
         {
-            ILID ()
+            Acquire (GFXM, 0xFFFF)
+            Local0 = SMI (0x46, Zero)
+            Notify (\_SB.LID0, 0x80) // Status Change
+            Release (GFXM)
         }
         Else
         {
@@ -4676,41 +4498,74 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
         If ((Local0 & 0x04))
         {
-            CESM (Local0)
+            SX10 ()
+            SX30 (0x18)
+            SX11 ()
+            Local0 = SX42 ()
+            SX12 ()
         }
-    }
-
-    Method (CESM, 1, NotSerialized)
-    {
-        Local0 = Arg0
-        SX10 ()
-        SX30 (0x18)
-        SX11 ()
-        Local0 = SX42 ()
-        SX12 ()
     }
 
     Scope (_GPE)
     {
         Method (_L11, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
         {
-            NEVT ()
+            SX10 ()
+            SX30 (0x1C)
+            SX11 ()
+            Local0 = SX41 ()
+            SX12 ()
+        
+            If ((Local0 & One))
+            {
+                Notify (\_SB.PWRB, 0x80) // Status Change
+            }
+
+            If ((Local0 & 0x04))
+            {
+                LIDE ()
+            }
+
+            If ((Local0 & 0x08))
+            {
+                PWRE ()
+            }
+
+            If ((Local0 & 0x80))
+            {
+                SMIE ()
+            }
         }
 
+        Name (WAKE, Zero)
         Method (_L17, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
         {
-            NWAK ()
-        }
-    }
+            WAKE = One
+            Local0 = SMI (0x89, Zero)
+            Local1 = Zero
+            If ((Local0 == Zero))
+            {
+                Local1 = One
+            }
 
-    Method (PSW, 2, NotSerialized)
-    {
-        SX10 ()
-        SX30 (0x06)
-        SX30 (Arg0)
-        SX30 (Arg1)
-        SX11 ()
-        SX12 ()
+            If ((Local0 & One))
+            {
+                Local1 = One
+            }
+
+            If ((Local0 & 0x02))
+            {
+                LIDE ()
+            }
+
+            If ((Local0 & 0x20)) {}
+            If (Local1)
+            {
+                Notify (\_SB.PWRB, 0x02) // Device Wake
+            }
+
+            WAKE = Zero
+        }
     }
 
     Method (DSS, 2, NotSerialized)
@@ -5343,15 +5198,11 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 EisaId ("SYN0002"), 
                 EisaId ("PNP0F13") /* PS/2 Mouse */
             })
-            Name (CRS, ResourceTemplate ()
+            Name (_CRS, ResourceTemplate ()
             {
                 IRQNoFlags ()
                     {12}
             })
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Return (CRS) /* \_SB_.PCI0.LPCB.PS2_.CRS_ */
-            }
         }
 
         Device (KBC)
@@ -5365,7 +5216,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             CreateByteField (DAHA, Zero, DCK0)
             CreateByteField (DAHA, One, DCK1)
             CreateByteField (DAHA, 0x02, DCK2)
-            Name (CRS, ResourceTemplate ()
+            Name (_CRS, ResourceTemplate ()
             {
                 IO (Decode16,
                     0x0060,             // Range Minimum
@@ -5394,10 +5245,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 IRQNoFlags ()
                     {1}
             })
-            Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-            {
-                Return (CRS) /* \_SB_.PCI0.LPCB.KBC_.CRS_ */
-            }
 
             OperationRegion (MMBX, SystemMemory, 0xFE800000, 0x0200)
             Field (MMBX, AnyAcc, Lock, Preserve)
@@ -5561,15 +5408,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     WATK (0x0A, DCK1)
                 }
             }
-        }
-
-        OperationRegion (GPI1, SystemIO, 0x0500, 0x4A)
-        Field (GPI1, ByteAcc, Lock, Preserve)
-        {
-            Offset (0x38), 
-                ,   4, 
-            GO36,   1, 
-            GI37,   1
         }
     }
 
@@ -5845,8 +5683,13 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 0x03
             })
             Method (_PSW, 1, NotSerialized)  // _PSW: Power State Wake
-            {
-                PSW (Arg0, 0x02)
+            {                
+                SX10 ()
+                SX30 (0x06)
+                SX30 (Arg0)
+                SX30 (0x02)
+                SX11 ()
+                SX12 ()
             }
         }
 
