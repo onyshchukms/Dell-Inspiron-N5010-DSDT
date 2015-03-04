@@ -3164,15 +3164,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                     Return (AR15) /* \_SB_.AR15 */
                 }
             }
-
-            Device (GBE)
-            {
-                Name (_ADR, 0x00190000)  // _ADR: Address
-                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-                {
-                    Return (GPRW (0x0D, 0x04))
-                }
-            }
         }
 
         Scope (\_GPE)
@@ -3196,7 +3187,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
 
             Method (_L0D, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
             {
-                Notify (\_SB.PCI0.GBE, 0x02) // Device Wake
                 Notify (\_SB.PWRB, 0x02) // Device Wake
             }
         }
