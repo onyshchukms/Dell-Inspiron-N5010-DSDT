@@ -45,10 +45,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Name (SHPC, One)
     Name (PEER, One)
     Name (PECS, One)
-    Name (P0HP, Zero)
-    Name (P1HP, Zero)
-    Name (P3HP, Zero)
-    Name (P4HP, One)
     Name (PEPM, Zero)
 
     Name (PICM, Zero)
@@ -2918,42 +2914,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (PEX0)
             {
                 Name (_ADR, 0x001C0000)  // _ADR: Address
-                OperationRegion (PXRC, PCI_Config, Zero, 0x0100)
-                Field (PXRC, AnyAcc, NoLock, Preserve)
-                {
-                    Offset (0x60), 
-                    Offset (0x62), 
-                    PMS,    1, 
-                    PMP,    1, 
-                    Offset (0xD8), 
-                        ,   30, 
-                    HPE,    1, 
-                    PCE,    1, 
-                        ,   30, 
-                    HPS,    1, 
-                    PCS,    1
-                }
-
-                Method (CSS, 0, NotSerialized)
-                {
-                    PMS = One
-                    PCS = One
-                    PMS = One
-                }
-
-                Method (SPRT, 1, NotSerialized)
-                {
-                    CSS ()
-                    PCE = One
-                    CSS ()
-                }
-
-                Method (WPRT, 1, NotSerialized)
-                {
-                    PCE = Zero
-                    CSS ()
-                }
-
                 Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     Return (GPRW (0x09, 0x03))
@@ -2968,42 +2928,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (PEX1)
             {
                 Name (_ADR, 0x001C0001)  // _ADR: Address
-                OperationRegion (PXRC, PCI_Config, Zero, 0x0100)
-                Field (PXRC, AnyAcc, NoLock, Preserve)
-                {
-                    Offset (0x60), 
-                    Offset (0x62), 
-                    PMS,    1, 
-                    PMP,    1, 
-                    Offset (0xD8), 
-                        ,   30, 
-                    HPE,    1, 
-                    PCE,    1, 
-                        ,   30, 
-                    HPS,    1, 
-                    PCS,    1
-                }
-
-                Method (CSS, 0, NotSerialized)
-                {
-                    PMS = One
-                    PCS = One
-                    PMS = One
-                }
-
-                Method (SPRT, 1, NotSerialized)
-                {
-                    CSS ()
-                    PCE = One
-                    CSS ()
-                }
-
-                Method (WPRT, 1, NotSerialized)
-                {
-                    PCE = Zero
-                    CSS ()
-                }
-
                 Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     Return (GPRW (0x09, 0x03))
@@ -3013,47 +2937,50 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 {
                     Return (AR12) /* \_SB_.AR12 */
                 }
+                
+                Device (APRT)
+                {
+                    Name (_ADR, Zero)  // _ADR: Address
+                    Name (_SUN, One)  // _SUN: Slot User Number
+                    Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
+                    {
+                        0x09, 
+                        0x04
+                    })
+                    Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
+                    {
+                        If ((Arg2 == Zero))
+                        {
+                            Return (Buffer (One)
+                            {
+                                 0x03                                             /* . */
+                            })
+                        }
+
+                        Return (Package ()
+                        {
+                            "built-in", 
+                            Buffer (One)
+                            {
+                                 0x00                                             /* . */
+                            }, 
+
+                            "device_type", 
+                            "AirPort", 
+                            "model", 
+                            "Broadcom BCM43225 802.11 a/b/g/n Wireless Network Controller", 
+                            "name", 
+                            "AirPort Extreme", 
+                            "compatible", 
+                            "pci14e4,43a0"
+                        })
+                    }
+                }
             }
 
             Device (PEX2)
             {
                 Name (_ADR, 0x001C0002)  // _ADR: Address
-                OperationRegion (PXRC, PCI_Config, Zero, 0x0100)
-                Field (PXRC, AnyAcc, NoLock, Preserve)
-                {
-                    Offset (0x60), 
-                    Offset (0x62), 
-                    PMS,    1, 
-                    PMP,    1, 
-                    Offset (0xD8), 
-                        ,   30, 
-                    HPE,    1, 
-                    PCE,    1, 
-                        ,   30, 
-                    HPS,    1, 
-                    PCS,    1
-                }
-
-                Method (CSS, 0, NotSerialized)
-                {
-                    PMS = One
-                    PCS = One
-                    PMS = One
-                }
-
-                Method (SPRT, 1, NotSerialized)
-                {
-                    CSS ()
-                    PCE = One
-                    CSS ()
-                }
-
-                Method (WPRT, 1, NotSerialized)
-                {
-                    PCE = Zero
-                    CSS ()
-                }
-
                 Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     Return (GPRW (0x09, 0x04))
@@ -3068,42 +2995,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (PEX3)
             {
                 Name (_ADR, 0x001C0003)  // _ADR: Address
-                OperationRegion (PXRC, PCI_Config, Zero, 0x0100)
-                Field (PXRC, AnyAcc, NoLock, Preserve)
-                {
-                    Offset (0x60), 
-                    Offset (0x62), 
-                    PMS,    1, 
-                    PMP,    1, 
-                    Offset (0xD8), 
-                        ,   30, 
-                    HPE,    1, 
-                    PCE,    1, 
-                        ,   30, 
-                    HPS,    1, 
-                    PCS,    1
-                }
-
-                Method (CSS, 0, NotSerialized)
-                {
-                    PMS = One
-                    PCS = One
-                    PMS = One
-                }
-
-                Method (SPRT, 1, NotSerialized)
-                {
-                    CSS ()
-                    PCE = One
-                    CSS ()
-                }
-
-                Method (WPRT, 1, NotSerialized)
-                {
-                    PCE = Zero
-                    CSS ()
-                }
-
                 Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     Return (GPRW (0x09, 0x03))
@@ -3118,42 +3009,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
             Device (PEX4)
             {
                 Name (_ADR, 0x001C0004)  // _ADR: Address
-                OperationRegion (PXRC, PCI_Config, Zero, 0x0100)
-                Field (PXRC, AnyAcc, NoLock, Preserve)
-                {
-                    Offset (0x60), 
-                    Offset (0x62), 
-                    PMS,    1, 
-                    PMP,    1, 
-                    Offset (0xD8), 
-                        ,   30, 
-                    HPE,    1, 
-                    PCE,    1, 
-                        ,   30, 
-                    HPS,    1, 
-                    PCS,    1
-                }
-
-                Method (CSS, 0, NotSerialized)
-                {
-                    PMS = One
-                    PCS = One
-                    PMS = One
-                }
-
-                Method (SPRT, 1, NotSerialized)
-                {
-                    CSS ()
-                    PCE = One
-                    CSS ()
-                }
-
-                Method (WPRT, 1, NotSerialized)
-                {
-                    PCE = Zero
-                    CSS ()
-                }
-
                 Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     Return (GPRW (0x09, 0x03))
@@ -3535,308 +3390,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         PE5E,   1, 
         PE6E,   1, 
         PE7E,   1
-    }
-
-    Scope (_GPE)
-    {
-        Method (_L01, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
-        {
-            DBG8 += One
-            If (((PE0E == Zero) && \_SB.PCI0.PEX0.HPST))
-            {
-                Sleep (0x64)
-                If (\_SB.PCI0.PEX0.PDCX)
-                {
-                    \_SB.PCI0.PEX0.PDCX = One
-                    \_SB.PCI0.PEX0.HPST = One
-                    Notify (\_SB.PCI0.PEX0, Zero) // Bus Check
-                }
-                Else
-                {
-                    \_SB.PCI0.PEX0.HPST = One
-                }
-            }
-
-            If (((PE1E == Zero) && \_SB.PCI0.PEX1.HPST))
-            {
-                Sleep (0x64)
-                If (\_SB.PCI0.PEX1.PDCX)
-                {
-                    \_SB.PCI0.PEX1.PDCX = One
-                    \_SB.PCI0.PEX1.HPST = One
-                    Notify (\_SB.PCI0.PEX1, Zero) // Bus Check
-                }
-                Else
-                {
-                    \_SB.PCI0.PEX1.HPST = One
-                }
-            }
-
-            If (((PE2E == Zero) && \_SB.PCI0.PEX2.HPST))
-            {
-                Sleep (0x64)
-                If (\_SB.PCI0.PEX2.PDCX)
-                {
-                    \_SB.PCI0.PEX2.PDCX = One
-                    \_SB.PCI0.PEX2.HPST = One
-                    Notify (\_SB.PCI0.PEX2, Zero) // Bus Check
-                }
-                Else
-                {
-                    \_SB.PCI0.PEX2.HPST = One
-                }
-            }
-
-            If (((PE3E == Zero) && \_SB.PCI0.PEX3.HPST))
-            {
-                Sleep (0x64)
-                If (\_SB.PCI0.PEX3.PDCX)
-                {
-                    \_SB.PCI0.PEX3.PDCX = One
-                    \_SB.PCI0.PEX3.HPST = One
-                    Notify (\_SB.PCI0.PEX3, Zero) // Bus Check
-                }
-                Else
-                {
-                    \_SB.PCI0.PEX3.HPST = One
-                }
-            }
-
-            If (((PE4E == Zero) && \_SB.PCI0.PEX4.HPST))
-            {
-                Sleep (0x64)
-                If (\_SB.PCI0.PEX4.PDCX)
-                {
-                    \_SB.PCI0.PEX4.PDCX = One
-                    \_SB.PCI0.PEX4.HPST = One
-                    Notify (\_SB.PCI0.PEX4, Zero) // Bus Check
-                }
-                Else
-                {
-                    \_SB.PCI0.PEX4.HPST = One
-                }
-            }
-        }
-    }
-
-    Scope (_SB.PCI0.PEX0)
-    {
-        Name (_HPP, Package (0x04)  // _HPP: Hot Plug Parameters
-        {
-            0x08, 
-            0x40, 
-            One, 
-            Zero
-        })
-        OperationRegion (PXRG, PCI_Config, Zero, 0x0100)
-        Field (PXRG, AnyAcc, NoLock, WriteAsZeros)
-        {
-            Offset (0x5A), 
-                ,   3, 
-            PDCX,   1, 
-            Offset (0xD8), 
-                ,   30, 
-            HPEN,   1, 
-            PCEN,   1, 
-                ,   30, 
-            HPST,   1, 
-            PCST,   1
-        }
-
-        Device (PXSX)
-        {
-            Name (_ADR, Zero)  // _ADR: Address
-            Method (_RMV, 0, NotSerialized)  // _RMV: Removal Status
-            {
-                Local0 = Zero
-                If ((P0HP == One))
-                {
-                    Local0 = One
-                }
-
-                Return (Local0)
-            }
-        }
-    }
-
-    Scope (_SB.PCI0.PEX1)
-    {
-        Name (_HPP, Package (0x04)  // _HPP: Hot Plug Parameters
-        {
-            0x08, 
-            0x40, 
-            One, 
-            Zero
-        })
-        OperationRegion (PXRG, PCI_Config, Zero, 0x0100)
-        Field (PXRG, AnyAcc, NoLock, Preserve)
-        {
-            Offset (0x5A), 
-                ,   3, 
-            PDCX,   1, 
-            Offset (0xD8), 
-                ,   30, 
-            HPEN,   1, 
-            PCEN,   1, 
-                ,   30, 
-            HPST,   1, 
-            PCST,   1
-        }
-
-        Device (PXSX)
-        {
-            Name (_ADR, Zero)  // _ADR: Address
-            Name (_SUN, 0x001C0001)  // _SUN: Slot User Number
-            Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
-            {
-                0x09, 
-                0x04
-            })
-            Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
-            {
-                If ((Arg2 == Zero))
-                {
-                    Return (Buffer (One)
-                    {
-                         0x03                                             /* . */
-                    })
-                }
-
-                Return (Package ()
-                {
-                    "built-in", 
-                    Buffer (One)
-                    {
-                         0x00                                             /* . */
-                    }, 
-
-                    "device_type", 
-                    "AirPort", 
-                    "model", 
-                    "Broadcom BCM43225 802.11 a/b/g/n Wireless Network Controller", 
-                    "name", 
-                    "AirPort Extreme", 
-                    "compatible", 
-                    "pci14e4,43a0"
-                })
-            }
-            
-            Method (_RMV, 0, NotSerialized)  // _RMV: Removal Status
-            {
-                Local0 = Zero
-                If ((P1HP == One))
-                {
-                    Local0 = One
-                }
-
-                Return (Local0)
-            }
-        }
-    }
-
-    Scope (_SB.PCI0.PEX2)
-    {
-        Name (_HPP, Package (0x04)  // _HPP: Hot Plug Parameters
-        {
-            0x08, 
-            0x40, 
-            One, 
-            Zero
-        })
-        OperationRegion (PXRG, PCI_Config, Zero, 0x0100)
-        Field (PXRG, AnyAcc, NoLock, Preserve)
-        {
-            Offset (0x5A), 
-                ,   3, 
-            PDCX,   1, 
-            Offset (0xD8), 
-                ,   30, 
-            HPEN,   1, 
-            PCEN,   1, 
-                ,   30, 
-            HPST,   1, 
-            PCST,   1
-        }
-    }
-
-    Scope (_SB.PCI0.PEX3)
-    {
-        Name (_HPP, Package (0x04)  // _HPP: Hot Plug Parameters
-        {
-            0x08, 
-            0x40, 
-            One, 
-            Zero
-        })
-        OperationRegion (PXRG, PCI_Config, Zero, 0x0100)
-        Field (PXRG, AnyAcc, NoLock, Preserve)
-        {
-            Offset (0x5A), 
-                ,   3, 
-            PDCX,   1, 
-            Offset (0xD8), 
-                ,   30, 
-            HPEN,   1, 
-            PCEN,   1, 
-                ,   30, 
-            HPST,   1, 
-            PCST,   1
-        }
-
-        Device (PXSX)
-        {
-            Name (_ADR, Zero)  // _ADR: Address
-            Method (_RMV, 0, NotSerialized)  // _RMV: Removal Status
-            {
-                Local0 = Zero
-                If ((P3HP == One))
-                {
-                    Local0 = One
-                }
-
-                Return (Local0)
-            }
-        }
-    }
-
-    Scope (_SB.PCI0.PEX4)
-    {
-        Name (_HPP, Package (0x04)  // _HPP: Hot Plug Parameters
-        {
-            0x08, 
-            0x40, 
-            One, 
-            Zero
-        })
-        OperationRegion (PXRG, PCI_Config, Zero, 0x0100)
-        Field (PXRG, AnyAcc, NoLock, Preserve)
-        {
-            Offset (0x5A), 
-                ,   3, 
-            PDCX,   1, 
-            Offset (0xD8), 
-                ,   30, 
-            HPEN,   1, 
-            PCEN,   1, 
-                ,   30, 
-            HPST,   1, 
-            PCST,   1
-        }
-
-        Device (PXSX)
-        {
-            Name (_ADR, Zero)  // _ADR: Address
-            Method (_RMV, 0, NotSerialized)  // _RMV: Removal Status
-            {
-                Local0 = Zero
-                If ((P4HP == One))
-                {
-                    Local0 = One
-                }
-
-                Return (Local0)
-            }
-        }
     }
 
     Mutex (GFXM, 0x01)
@@ -5362,11 +4915,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
         If (Arg0)
         {
             \_SB.PCI0.LPCB.SPTS (Arg0)
-            \_SB.PCI0.PEX0.SPRT (Arg0)
-            \_SB.PCI0.PEX1.SPRT (Arg0)
-            \_SB.PCI0.PEX2.SPRT (Arg0)
-            \_SB.PCI0.PEX3.SPRT (Arg0)
-            \_SB.PCI0.PEX4.SPRT (Arg0)
             
             If ((Arg0 == 0x03))
             {
@@ -5391,89 +4939,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     Method (_WAK, 1, NotSerialized)  // _WAK: Wake
     {
         DBG8 = (Arg0 << 0x04)
-        
-        If (\_SB.PCI0.PEX0.PMS)
-        {
-            \_SB.PCI0.PEX0.WPRT (Arg0)
-            Notify (\_SB.PCI0.PEX0, 0x02) // Device Wake
-        }
-        Else
-        {
-            \_SB.PCI0.PEX0.WPRT (Arg0)
-        }
 
-        If (\_SB.PCI0.PEX1.PMS)
-        {
-            \_SB.PCI0.PEX1.WPRT (Arg0)
-            Notify (\_SB.PCI0.PEX1, 0x02) // Device Wake
-        }
-        Else
-        {
-            \_SB.PCI0.PEX1.WPRT (Arg0)
-        }
-
-        If (\_SB.PCI0.PEX2.PMS)
-        {
-            \_SB.PCI0.PEX2.WPRT (Arg0)
-            Notify (\_SB.PCI0.PEX2, 0x02) // Device Wake
-        }
-        Else
-        {
-            \_SB.PCI0.PEX2.WPRT (Arg0)
-        }
-
-        If (\_SB.PCI0.PEX3.PMS)
-        {
-            \_SB.PCI0.PEX3.WPRT (Arg0)
-            Notify (\_SB.PCI0.PEX3, 0x02) // Device Wake
-        }
-        Else
-        {
-            \_SB.PCI0.PEX3.WPRT (Arg0)
-        }
-
-        If (\_SB.PCI0.PEX4.PMS)
-        {
-            \_SB.PCI0.PEX4.WPRT (Arg0)
-            Notify (\_SB.PCI0.PEX4, 0x02) // Device Wake
-        }
-        Else
-        {
-            \_SB.PCI0.PEX4.WPRT (Arg0)
-        }
-
-        If ((PE4E == Zero))
-        {
-            If (\_SB.PCI0.PEX4.PDCX)
-            {
-                \_SB.PCI0.PEX4.PDCX = One
-                \_SB.PCI0.PEX4.HPST = One
-            }
-            Else
-            {
-                \_SB.PCI0.PEX4.HPST = One
-            }
-
-            Notify (\_SB.PCI0.PEX4, Zero) // Bus Check
-        }
-        
-        If ((PE2E == Zero))
-        {
-            If (\_SB.PCI0.PEX2.PDCX)
-            {
-                DBG8 = 0xEE
-                \_SB.PCI0.PEX2.PDCX = One
-                \_SB.PCI0.PEX2.HPST = One
-            }
-            Else
-            {
-                DBG8 = 0xEF
-                \_SB.PCI0.PEX2.HPST = One
-            }
-
-            Notify (\_SB.PCI0.PEX2, Zero) // Bus Check
-        }
-        
         SOST ()
         MIS0 = SMI (0x98, Zero)
         Notify (\_SB.ADP1, 0x80) // Status Change
@@ -5490,7 +4956,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 }
             }
         }
-        
+
         If (ASSB)
         {
             ASSB = WSSB /* \WSSB */
