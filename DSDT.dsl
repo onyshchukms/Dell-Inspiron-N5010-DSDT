@@ -984,6 +984,99 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
                 Device (PEGP)
                 {
                     Name (_ADR, 0xFFFF)  // _ADR: Address
+                    
+                    Method (_INI, 0, NotSerialized)  // _INI: Initialize
+                    {
+                        _ADR = Zero
+                    }
+
+                    Method (_DOS, 1, NotSerialized)  // _DOS: Disable Output Switching
+                    {
+                        DSEN = (Arg0 & 0x03)
+                    }
+
+                    Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Devices
+                    {
+                        Return (Package (0x03)
+                        {
+                            0x00010100, 
+                            0x00010110, 
+                            0x00010210
+                        })
+                    }
+
+                    Device (LCD)
+                    {
+                        Name (_HID, EisaId ("LCD1234"))
+                        Method (_ADR, 0, NotSerialized)  // _ADR: Address
+                        {
+                            Return (0x0110)
+                        }
+
+                        Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
+                        {
+                            Local0 = SMI (0x8E, One)
+                            Return (Local0)
+                        }
+
+                        Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
+                        {
+                            Local0 = SMI (0x99, One)
+                            Return (Local0)
+                        }
+
+                        Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
+                        {
+                            SX10 ()
+                            SX30 (0x08)
+                            SX30 (One)
+                            SX32 (Arg0)
+                            SX11 ()
+                            SX12 ()
+                        }
+
+                        Method (_BCL, 0, NotSerialized)  // _BCL: Brightness Control Levels
+                        {
+                            Return (Package (0x12)
+                            {
+                                0x64, 
+                                0x1E, 
+                                0x06, 
+                                0x0C, 
+                                0x12, 
+                                0x18, 
+                                0x1E, 
+                                0x24, 
+                                0x2A, 
+                                0x30, 
+                                0x36, 
+                                0x3C, 
+                                0x42, 
+                                0x48, 
+                                0x4E, 
+                                0x54, 
+                                0x5A, 
+                                0x64
+                            })
+                        }
+
+                        Method (_BCM, 1, NotSerialized)  // _BCM: Brightness Control Method
+                        {
+                            SX10 ()
+                            SX30 (0x19)
+                            SX30 (One)
+                            SX30 (Arg0)
+                            BRTL = Arg0
+                            SX11 ()
+                            SX12 ()
+                        }
+
+                        Method (_BQC, 0, NotSerialized)  // _BQC: Brightness Query Current
+                        {
+                            Local0 = SMI (0x19, 0x02)
+                            Return (Local0)
+                        }
+                    }
                 }
             }
 
@@ -3279,102 +3372,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 2, "DELL  ", "WN09   ", 0x00005010)
     {
         Name (_HID, EisaId ("PNP0C01") /* System Board */)  // _HID: Hardware ID
         Name (_UID, One)  // _UID: Unique ID
-    }
-
-    Scope (_SB.PCI0.P0P1.PEGP)
-    {
-        Method (_INI, 0, NotSerialized)  // _INI: Initialize
-        {
-            _ADR = Zero
-        }
-
-        Method (_DOS, 1, NotSerialized)  // _DOS: Disable Output Switching
-        {
-            DSEN = (Arg0 & 0x03)
-        }
-
-        Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Devices
-        {
-            Return (Package (0x03)
-            {
-                0x00010100, 
-                0x00010110, 
-                0x00010210
-            })
-        }
-
-        Device (LCD)
-        {
-            Name (_HID, EisaId ("LCD1234"))
-            Method (_ADR, 0, NotSerialized)  // _ADR: Address
-            {
-                Return (0x0110)
-            }
-
-            Method (_DCS, 0, NotSerialized)  // _DCS: Display Current Status
-            {
-                Local0 = SMI (0x8E, One)
-                Return (Local0)
-            }
-
-            Method (_DGS, 0, NotSerialized)  // _DGS: Display Graphics State
-            {
-                Local0 = SMI (0x99, One)
-                Return (Local0)
-            }
-
-            Method (_DSS, 1, NotSerialized)  // _DSS: Device Set State
-            {
-                SX10 ()
-                SX30 (0x08)
-                SX30 (One)
-                SX32 (Arg0)
-                SX11 ()
-                SX12 ()
-            }
-
-            Method (_BCL, 0, NotSerialized)  // _BCL: Brightness Control Levels
-            {
-                Return (Package (0x12)
-                {
-                    0x64, 
-                    0x1E, 
-                    0x06, 
-                    0x0C, 
-                    0x12, 
-                    0x18, 
-                    0x1E, 
-                    0x24, 
-                    0x2A, 
-                    0x30, 
-                    0x36, 
-                    0x3C, 
-                    0x42, 
-                    0x48, 
-                    0x4E, 
-                    0x54, 
-                    0x5A, 
-                    0x64
-                })
-            }
-
-            Method (_BCM, 1, NotSerialized)  // _BCM: Brightness Control Method
-            {
-                SX10 ()
-                SX30 (0x19)
-                SX30 (One)
-                SX30 (Arg0)
-                BRTL = Arg0
-                SX11 ()
-                SX12 ()
-            }
-
-            Method (_BQC, 0, NotSerialized)  // _BQC: Brightness Query Current
-            {
-                Local0 = SMI (0x19, 0x02)
-                Return (Local0)
-            }
-        }
     }
 
     OperationRegion (RCRB, SystemMemory, SRCB, SRCL)
